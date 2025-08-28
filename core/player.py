@@ -18,6 +18,7 @@ class player:
     def __repr__(self):
         return f"Player: {self.__name__}, Direccion: {self.__direccion__}, Fichas: {self.__fichas__}, Turno: {self.__turno__}, Ganador: {self.__ganador__}"
     
+    
 if __name__ == "__main__":
     p = player("Lucho", -1)
     print(p)
