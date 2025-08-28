@@ -15,7 +15,6 @@ class player:
     def get_fichas(self):
         return self.__fichas__
     
-    
     def __repr__(self):
         return f"Player: {self.__name__}, Direccion: {self.__direccion__}, Fichas: {self.__fichas__}, Turno: {self.__turno__}, Ganador: {self.__ganador__}"
     
