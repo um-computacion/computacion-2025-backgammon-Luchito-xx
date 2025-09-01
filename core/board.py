@@ -2,6 +2,7 @@ from ficha import Ficha
 
 class board:
     def __init__(self):
+        
         self.__celdas__ = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
         self.__capturas__ = {"O": 0, "X": 0}  # Fichas capturadas
 
