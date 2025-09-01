@@ -1,17 +1,25 @@
+from ficha import Ficha
+
 class board:
     def __init__(self):
-        self.__celdas__ = [("X", 0)] * 24
+        self.__celdas__ = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
+        self.__capturas__ = {"O": 0, "X": 0}  # Fichas capturadas
+
 
     def inicio(self):
-        self.__celdas__[0] = ("A", 2)  
-        self.__celdas__[11] = ("A", 5)
-        self.__celdas__[16] = ("A", 3)
-        self.__celdas__[18] = ("A", 5)
+        self.__celdas__ = [[] for _ in range(24)]
+        self.__capturas__ = []
 
-        self.__celdas__[23] = ("B", 2)
-        self.__celdas__[12] = ("B", 5)
-        self.__celdas__[7] = ("B", 3)
-        self.__celdas__[5] = ("B", 5)   
+        self.__celdas__[0] = [Ficha ("X") for _ in range(2)]
+        self.__celdas__[11] = [Ficha ("X") for _ in range(5)]
+        self.__celdas__[16] = [Ficha ("X") for _ in range(3)]
+        self.__celdas__[18] = [Ficha ("X") for _ in range(5)]
+
+        self.__celdas__[23] = [Ficha ("O") for _ in range(2)]             
+        self.__celdas__[12] = [Ficha ("O") for _ in range(5)]
+        self.__celdas__[7] = [Ficha ("O") for _ in range(3)]
+        self.__celdas__[5] = [Ficha ("O") for _ in range(5)]
+
              
     def __str__(self):
         return f"Board: {self.__celdas__}"
@@ -20,13 +28,17 @@ class board:
         return self.__celdas__[celdax]
     
     def get_board(self):
-        # Mejorar formato
-        print( "Celda | Fichas | Jugador"  )
-        for i, celda in enumerate(self.__celdas__):
-            print( f"  {i}   |   {celda[1]}   |   {celda[0]} " )
-        return ""
+        def mostrar(lst):
+            if not lst:
+                return ""
+            else:
+                return f"{lst[0].get_dueño()}{len(lst)}"
+        return [mostrar(celda) for celda in self.__celdas__]
     
-    def mover(self, celda: int, dado: int, jugador:str):
+    def get_capturas(self):
+        return self.__capturas__
+    
+"""    def mover(self, celda: int, dado: int, jugador:str):
         try:
 
             if celda < 0 or celda > 23:
@@ -65,14 +77,12 @@ class board:
                 # Falta capturar ficha oponente y poner en barra
 
         except ValueError as e:
-            return str(e) 
+            return str(e)  """
             
         
 
 if __name__ == "__main__":
     b = board()
     b.inicio()
-    print(b, "\n")
-    print(b.get_celda(0), "\n")
-    print(b.mover(0, 5, "A"), "\n")
     print(b.get_board(), "\n")
+    print(b.get_capturas())
