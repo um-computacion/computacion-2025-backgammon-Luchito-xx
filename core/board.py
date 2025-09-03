@@ -1,6 +1,6 @@
 from ficha import Ficha
 
-class board:
+class Board:
     def __init__(self):
         
         self.__celdas__ = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
@@ -25,16 +25,30 @@ class board:
     def __str__(self):
         return f"Board: {self.__celdas__}"
     
+    
     def get_celda(self, celdax:int):
         return self.__celdas__[celdax]
     
     def get_board(self):
-        def mostrar(lst):
-            if not lst:
-                return ""
+        fila_superior = []
+        fila_inferior = []
+        
+        for i in reversed(range(12)):
+            celda = self.__celdas__[i]
+            if celda:
+                fichas = "".join([f.get_jugador() for f in celda])
             else:
-                return f"{lst[0].get_dueño()}{len(lst)}"
-        return [mostrar(celda) for celda in self.__celdas__]
+                fichas = "-"
+            fila_superior.append(f"{i:02d}:{fichas}")
+
+        for i in range(12, 24):
+            celda = self.__celdas__[-(i-12)]
+            if celda:
+                fichas = "".join([f.get_jugador() for f in celda])
+            else:
+                fichas = "-"
+            fila_inferior.append(f"{i:02d}:{fichas}")
+        return fila_superior, fila_inferior
     
     def get_capturas(self):
         return self.__capturas__
@@ -83,7 +97,9 @@ class board:
         
 
 if __name__ == "__main__":
-    b = board()
+    b = Board()
     b.inicio()
-    print(b.get_board(), "\n")
+    fila_sup, fila_inf = b.get_board()
+    print(" ".join(fila_sup))
+    print(" ".join(fila_inf))
     print(b.get_capturas())
