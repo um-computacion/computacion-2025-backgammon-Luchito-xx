@@ -1,7 +1,10 @@
-name: CI with Coverageon:
+name: CI with Coverage
+
+on:
   push:
     branches:
       - main
+      
 jobs:
 
   build-and-analyze:
