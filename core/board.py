@@ -4,7 +4,7 @@ class Board:
     def __init__(self):
         
         self.__celdas = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
-        self.__capturas = {"O": 0, "X": 0}  # Fichas capturadas
+        self.__capturas = []  # Fichas capturadas
 
 
     def inicio(self):
@@ -49,11 +49,25 @@ class Board:
     def mover(self, jugador:str, celda:int , saltos:int):
         # Terminar validaciones primero ¿usar def mov_valido primero?
 
+        celda_origen = self.__celdas[celda]
+        ficha = celda_origen.pop()
+
+        destino = self.__celdas[saltos + celda]
+        
         # Caso destino vacio
-
+        if not destino:
+            self.__celdas[saltos + celda].append[ficha] 
+            return True
+        
         # Caso destino con fichas propias
-
+        if destino[0].get_jugador() == jugador:
+            self.__celdas[saltos + celda].append[ficha]
+            return True
         # Caso destino con 1 ficha jugador (captura)
+        captura = destino.pop()
+        captura.capturar()
+        self.__capturas.append(captura)
+        self.__celdas[saltos + celda].append(ficha)
         pass
 
 
