@@ -35,19 +35,19 @@ class Board:
         if not celda:
             return "--"
         jugador = celda[0].get_jugador()
-        return f"{jugador}{len(celda)}"
+        return f"{jugador * len(celda)}"
     
     def get_board(self):
 
-        fila_superior = [f"{i:02}:{self.repr_celda(self.__celdas(i))}" for i in range(0,12)]
+        fila_superior = [f"{i:02}:{self.repr_celda(self.__celdas[i])} \n" for i in range(0,12)]
 
-        fila_inferior = [f"{i:02}:{self.repr_celda(self.__celdas(i))}" for i in range(12,24)]
+        fila_inferior = [f"{i:02}:{self.repr_celda(self.__celdas[i])} \n" for i in range(12,24)]
 
         return "".join(fila_superior) + "\n" + "".join(fila_inferior) + "\n" #Poner las fichas capturadas
         
         
     def mover(self, jugador:str, celda:int , saltos:int):
-        # Terminar validaciones primero
+        # Terminar validaciones primero ¿usar def mov_valido primero?
 
         # Caso destino vacio
 
@@ -60,5 +60,5 @@ class Board:
 if __name__ == "__main__":
     b = Board()
     b.inicio()
-    b.get_board()
+    print(b.get_board())
     print(b.get_capturas())
