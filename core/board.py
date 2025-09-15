@@ -25,40 +25,40 @@ class Board:
     def __str__(self):
         return f"Board: {self.__celdas}"
     
-    
-    def get_celda(self, celdax:int):
-        return self.__celdas[celdax]
-    
-    def get_board(self):
-        fila_superior = []
-        fila_inferior = []
-        
-        for i in reversed(range(12)):
-            celda = self.__celdas[i]
-            if celda:
-                fichas = "".join([f.get_jugador() for f in celda])
-            else:
-                fichas = "-"
-            fila_superior.append(f"{i}:{fichas}")
+    def get_celdas(self):
+        return self.__celdas
 
-        for i in range(12, 24):
-            celda = self.__celdas[-(i-12)]
-            if celda:
-                fichas = "".join([f.get_jugador() for f in celda])
-            else:
-                fichas = "-"
-            fila_inferior.append(f"{i}:{fichas}")
-        return fila_superior, fila_inferior
-    
     def get_capturas(self):
         return self.__capturas
+    
+    def repr_celda(self, celda:list):
+        if not celda:
+            return "--"
+        jugador = celda[0].get_jugador()
+        return f"{jugador}{len(celda)}"
+    
+    def get_board(self):
+
+        fila_superior = [f"{i:02}:{self.repr_celda(self.__celdas(i))}" for i in range(0,12)]
+
+        fila_inferior = [f"{i:02}:{self.repr_celda(self.__celdas(i))}" for i in range(12,24)]
+
+        return "".join(fila_superior) + "\n" + "".join(fila_inferior) + "\n" #Poner las fichas capturadas
         
         
+    def mover(self, jugador:str, celda:int , saltos:int):
+        # Terminar validaciones primero
+
+        # Caso destino vacio
+
+        # Caso destino con fichas propias
+
+        # Caso destino con 1 ficha jugador (captura)
+        pass
+
 
 if __name__ == "__main__":
     b = Board()
     b.inicio()
-    fila_sup, fila_inf = b.get_board()
-    print(" ".join(fila_sup))
-    print(" ".join(fila_inf))
+    b.get_board()
     print(b.get_capturas())
