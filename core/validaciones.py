@@ -1,4 +1,5 @@
 from exceptions import *
+from ficha import Ficha
 
 '''
 Validar: 
@@ -28,15 +29,17 @@ class Validaciones:
             raise CeldaBloqueadaError(f"La celda destino de la ficha esta ocupada por {len(ficha_destino)} fichas enemigas")
     
     @staticmethod
-    def movimiento_valido(celdas:list, celda:int, saltos:int, jugador:str):
+    def movimiento_valido(celdas:list, celda:int, saltos:int, jugador:str, validar_salida = False):
 
         Validaciones.validar_celda(celda)
         ficha = celdas[celda]
+
         Validaciones.validar_ficha_celda(ficha, jugador)
         
         destino = celda + saltos if jugador == "X" else celda - saltos 
+        
         if destino < 0 or destino > 23: 
-            if validar_salida: # Falta implementar
+            if validar_salida:
                 return None
             raise FueraDeRangoError(f"Destino {destino} fuera del rango de la tabla (0-23)")
     
@@ -44,11 +47,59 @@ class Validaciones:
         ficha_destino = celdas[destino]
         Validaciones.validar_destino(ficha_destino, jugador)
 
+        return destino
+
 
     @staticmethod
-    def validar_salida():
-        pass
+    def validar_salida(celdas:list, capturas:list, jugador:str):
 
+        for ficha in capturas:
+            if ficha.get_jugador() == jugador:
+                return False
+        
+        if jugador == "X":
+            rango_salida = range(0,18)
+        else:
+            rango_salida = range(6, 24)
+        
+        for celda in rango_salida:
+            for ficha in celdas[celda]:
+                if ficha.get_jugador() == jugador:
+                    return False
+                
+        return True
+    
+    @staticmethod
+    def validar_movimiento_salida(celdas:list, capturas:list, celda:int, salto:int, jugador:str):
+
+        if not Validaciones.validar_salida(celdas,capturas,jugador):
+            return False
+        
+        destino = celda + salto if jugador == "X" else celda - salto
+
+        if 0 <= celda <= 23:
+            return False
+        
+        if jugador == "X":
+            if destino == 24:
+                return  True
+            
+            for pos in range(celda + 1, 24):
+                for ficha in celdas[pos]:
+                    if ficha.get_jugador() == jugador:
+                        return False
+            return True
+        
+        else:
+            if destino == -1:
+                return True
+            
+            for pos in range(0, celda):
+                for ficha in celdas[pos]:
+                    if ficha.get_jugador() == jugador:
+                        return False
+            return True
+        
     @staticmethod
     def validar_victoria(celdas: list, capturas:list, jugador: str):
         # Chequear
@@ -61,3 +112,4 @@ class Validaciones:
 
         fichas_capturadas = sum(1 for ficha in capturas if ficha.get_jugador() == jugador)
         return(fichas_capturadas + fichas) == 0
+
