@@ -62,7 +62,7 @@ class Backgammon:
 
         jugador = self.get_jugador()
 
-        self.__board.mover(jugador.get_nombre(), celda, salto)
+        self.__board.mover(jugador.get_name(), celda, salto)
 
         self.__saltos.pop(i)
 
@@ -82,6 +82,3 @@ class Backgammon:
 
         
     
-    
-
-
