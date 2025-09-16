@@ -1,5 +1,5 @@
 from ficha import Ficha
-
+from validaciones import *
 class Board:
     def __init__(self):
         
@@ -45,30 +45,57 @@ class Board:
 
         return "".join(fila_superior) + "\n" + "".join(fila_inferior) + "\n" #Poner las fichas capturadas
         
-        
-    def mover(self, jugador:str, celda:int , saltos:int):
-        # Terminar validaciones primero ¿usar def mov_valido primero?
+    
+    def validar_movimiento(self, celda:int, salto:int, jugador:str):
+        try:
+            validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
+            Validaciones.movimiento_valido (self.__celdas, celda, salto, jugador, validar_salida=validar_salida)
 
+            return True
+        except Exception:
+            return False
+
+
+
+    def mover(self, celda:int, salto:int, jugador:str):
+
+        #Validar
+        validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
+
+        destino = Validaciones.movimiento_valido(self.__celdas, celda, salto, jugador, validar_salida = validar_salida)
+        
+        #Sacar de tablero
+        if destino is None:
+            if Validaciones.validar_movimiento_salida(self.__celdas, self.__capturas, celda, salto, jugador):
+                celda_origen = self.__celdas[celda]
+                ficha_sacada = celda_origen.pop()
+                
+                return True
+            else: 
+                raise FueraDeRangoError("No se pueden sacar fichas del tablero")
+            
+        
         celda_origen = self.__celdas[celda]
-        ficha = celda_origen.pop()
+        ficha_sacada = celda_origen.pop()
 
-        destino = self.__celdas[saltos + celda]
+        dst = self.__celdas[salto + celda]
         
-        # Caso destino vacio
-        if not destino:
-            self.__celdas[saltos + celda].append[ficha] 
+        # Dentro de tablero
+        if not dst:
+            self.__celdas[destino].append(ficha_sacada)
             return True
         
-        # Caso destino con fichas propias
-        if destino[0].get_jugador() == jugador:
-            self.__celdas[saltos + celda].append[ficha]
+        #Ficha propia
+        if dst[0].get_jugador() == jugador:
+            self.__celdas[destino].append(ficha_sacada)
             return True
-        # Caso destino con 1 ficha jugador (captura)
-        captura = destino.pop()
-        captura.capturar()
-        self.__capturas.append(captura)
-        self.__celdas[saltos + celda].append(ficha)
-        pass
+        
+        # Captura ficha
+        capturada = dst.pop()
+        capturada.set_capturada()
+        self.__celdas[destino].append(ficha_sacada)
+
+        return True
 
 
 if __name__ == "__main__":
@@ -76,3 +103,4 @@ if __name__ == "__main__":
     b.inicio()
     print(b.get_board())
     print(b.get_capturas())
+
