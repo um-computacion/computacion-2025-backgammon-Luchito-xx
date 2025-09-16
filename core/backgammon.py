@@ -3,30 +3,6 @@ from player import Player
 from dice import Dice
 from validaciones import *
 
-''' 
-    Controlador del juego
-    
-    Que hace: 
-        - Manejar jugadores, tablero, dados... Con el fin de ejecutar logica del juego
-        - Facilitar manejo para el CLI y algunas pruebas
-
-    Posibles atributos
-        - __board
-        - __player
-        - __turno
-        - __dice
-        - __validacion
-
-    Metodos a aplicar:
-        - constructor __init__
-        - inicio()
-        - roll_dice()
-        - validar_movimiento()
-        - mover()
-        - victoria()
-         
-'''
-
 class Backgammon:
     def __init__(self, board: Board, players: list, dice: Dice):
         self.__board = Board()
@@ -34,6 +10,7 @@ class Backgammon:
         self.__dice = Dice()
         self.__turno = 0
         self.__saltos = []
+        self.__ganador = None
 
     def inicio(self):
         self.__board.inicio()
@@ -49,7 +26,7 @@ class Backgammon:
     
     def get_jugador(self):
         return self.__players[self.__turno]
-    
+
     def mover(self, celda:int, salto:int):
         
         if not self.__saltos:
@@ -60,17 +37,19 @@ class Backgammon:
         except ValueError:
             raise ValueError(f"No hay un salto pendiente igual a {salto}")
 
-        jugador = self.get_jugador()
-
-        self.__board.mover(jugador.get_name(), celda, salto)
-
         self.__saltos.pop(i)
 
-        # Como  manejar movimientos?
+        jugador = self.get_jugador()
 
-        # cambiar turno cuando no queden mas
+        self.__board.mover(celda, salto, jugador) #????
 
-        pass
+
+        if Validaciones.validar_victoria(self.__board.get_celdas(),self.__board.get_capturas(), jugador): #?? porque jugador no es un str
+            self.__ganador = jugador
+
+        if not self.__saltos:
+            self.cambio_turno()
+
 
     def cambio_turno(self):
         self.__turno = 1 - self.__turno
