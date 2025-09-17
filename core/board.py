@@ -103,4 +103,9 @@ if __name__ == "__main__":
     b.inicio()
     print(b.get_board())
     print(b.get_capturas())
-
+    try:
+        mov = b.mover(0,3,"X")
+        print(mov)
+        print(b.get_board())
+    except Exception as e:
+        print("error", e)
