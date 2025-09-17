@@ -56,6 +56,23 @@ class Backgammon:
         self.__saltos = []
 
 
+    def mostrar(self):
+        return{
+            "board": self.__board.get_board(),
+            "turno": self.get_jugador().get_name(),
+            "saltos": list(self.__saltos),
+            "capturas":[(ficha.get_jugador() for ficha in self.__board.get_capturas())],
+            "ganador": self.__ganador
+        }
+
+if __name__ == "__main__":
+    game = Backgammon()
+    game.inicio
+    print(game.mostrar())
+    print(game.tirar_dado())
+    
+
+
 
     
 
