@@ -41,7 +41,7 @@ class Backgammon:
 
         jugador = self.get_jugador()
 
-        self.__board.mover(celda, salto, jugador) #????
+        self.__board.mover(celda, salto, jugador.get_name())
 
 
         if Validaciones.validar_victoria(self.__board.get_celdas(),self.__board.get_capturas(), jugador): #?? porque jugador no es un str
