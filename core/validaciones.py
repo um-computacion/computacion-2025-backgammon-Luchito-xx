@@ -1,5 +1,5 @@
-from exceptions import *
-from ficha import Ficha
+from .exceptions import *
+from .ficha import Ficha
 
 '''
 Validar: 
@@ -112,13 +112,3 @@ class Validaciones:
 
         fichas_capturadas = sum(1 for ficha in capturas if ficha.get_jugador() == jugador)
         return(fichas_capturadas + fichas) == 0
-
-if __name__ == "__main__":
-    from ficha import Ficha
-    celdas = [[] for i in range(24)]
-    celdas[23] = [Ficha("O"),Ficha("X")]
-    celdas[22] = [Ficha("B")]
-    capturas = []
-
-    print(Validaciones.validar_salida(celdas,capturas,"B"))
-    print(Validaciones.validar_movimiento_salida(celdas, capturas,0,1,"B"))
