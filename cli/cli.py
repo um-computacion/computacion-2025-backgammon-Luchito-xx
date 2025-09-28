@@ -1,37 +1,43 @@
-from core.board import board
-from core.player import player    
-from core.dice import dice    
+
+"""
+que hacer: 
+- mostrar tablero
+- tira dados
+- intenta un movimiento simple (origen y pasos)
+"""
+
+from core.backgammon import Backgammon
+from core.validaciones import ValidacionError
 
 def main():
-    print("Backgammon Reglas: ... \n")
-    b = board()
-    b.inicio()
-    print(b.get_board())
+    game = Backgammon()
+    game.inicio()
 
-    jugadorA = player("A")
-    jugadorB = player("B")
-    turno = jugadorA
+    print("Backgammon :D\n")
+    print(game.mostrar()["board"])
 
-    while True:
-        print(f"Turno del jugador: {turno.get_name()}")
-        dado = dice()
-        valor_dado = dado.roll()
-        print(f"Valor del dado: {valor_dado}")
+    d1, d2 = game.tirar_dado()
+    print(f"\nvalor de dados: {d1}, {d2}")
+    print("Movimientos pendientes:", game.get_saltos())
 
-        try:
-            celda_origen = int(input("Ingresa origen (0-23): "))
+    mov = input("\ningrese 'origen pasos' (11 2) o (0 1) ").strip()
+    if not mov:
+        print("fin prueba")
+        return
 
-            resultado = b.mover(celda_origen, valor_dado, turno.get_name())
-            print(b.mover(celda_origen, valor_dado, turno.get_name()))
-            if resultado == ("X", 0):
-                raise ValueError("No se pudo realizar el movimiento: ", resultado)
-            else:
-                print(b.get_board())
-                turno = jugadorB if turno == jugadorA else jugadorA
-        except ValueError:
-            print("Entrada invalida. Intente de nuevo.")
-            
-            break
+    try:
+        origen, salto = mov.split()
+        origen = int(origen)
+        salto = int(salto)
+        game.mover(origen, salto)
+        print("\nMovimiento aplicado\ntablero:\n")
+        print(game.get_state()["board"])
+        if game.get_state().get("winner"):
+            print("¡Ganadooor¡¡:", game.mostrar()["winner"], ")")
+    except ValidacionError as e:
+        print("movimiento invalido:", e)
+    except Exception as e:
+        print("error:", e)
 
 if __name__ == "__main__":
     main()
