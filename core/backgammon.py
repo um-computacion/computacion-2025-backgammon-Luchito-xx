@@ -1,13 +1,13 @@
-from board import Board
-from player import Player
-from dice import Dice
-from validaciones import *
+from .board import Board
+from .player import Player
+from .dice import Dice
+from .validaciones import *
 
 class Backgammon:
-    def __init__(self, board: Board, players: list, dice: Dice):
-        self.__board = Board()
-        self.__players = [Player("X"), Player("O")]
-        self.__dice = Dice()
+    def __init__(self, board=None, players=None, dice=None):
+        self.__board = board if board else Board()
+        self.__players = players if players else [Player("X"), Player("O")]
+        self.__dice = dice if dice else Dice()
         self.__turno = 0
         self.__saltos = []
         self.__ganador = None
@@ -49,6 +49,7 @@ class Backgammon:
 
         if not self.__saltos:
             self.cambio_turno()
+    
 
 
     def cambio_turno(self):
@@ -64,17 +65,3 @@ class Backgammon:
             "capturas":[(ficha.get_jugador() for ficha in self.__board.get_capturas())],
             "ganador": self.__ganador
         }
-
-if __name__ == "__main__":
-    game = Backgammon()
-    game.inicio
-    print(game.mostrar())
-    print(game.tirar_dado())
-    
-
-
-
-    
-
-        
-    
