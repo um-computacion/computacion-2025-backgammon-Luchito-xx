@@ -19,17 +19,7 @@ class Ficha:
     def __repr__(self) -> str:
         estado = "Capturada" if self.__capturada else "Libre"
         return f"Dueño de la ficha es {self.__jugador} y esta {estado}"
-
-if __name__ == "__main__":
-    f = Ficha("X")
-    g = Ficha("O")
-    print(f)
-    print(f.get_jugador())
-    print(f.get_capturada())
-    f.set_capturada(True)
-    print(f.get_capturada())
-    print(f)
-    print(g)    
+    
 
 
         
