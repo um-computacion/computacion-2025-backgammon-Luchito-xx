@@ -16,8 +16,11 @@ def main():
     print("Backgammon :D\n")
     print(game.mostrar()["board"])
 
-    d1, d2 = game.tirar_dado()
-    print(f"\nvalor de dados: {d1}, {d2}")
+    saltos = []
+    saltos = game.tirar_dado()
+
+    print(f"\nvalor de dados: {saltos}")
+    print(f"Turno de: {game.get_jugador().get_name()}")
     print("Movimientos pendientes:", game.get_saltos())
 
     mov = input("\ningrese 'origen pasos' (11 2) o (0 1) ").strip()
@@ -31,9 +34,9 @@ def main():
         salto = int(salto)
         game.mover(origen, salto)
         print("\nMovimiento aplicado\ntablero:\n")
-        print(game.get_state()["board"])
-        if game.get_state().get("winner"):
-            print("¡Ganadooor¡¡:", game.mostrar()["winner"], ")")
+        print(game.mostrar()["board"])
+        if game.mostrar().get("ganador"):
+            print("¡Ganadooor¡¡:", game.mostrar()["ganador"], ")")
     except ValidacionError as e:
         print("movimiento invalido:", e)
     except Exception as e:
