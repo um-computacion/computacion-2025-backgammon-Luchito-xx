@@ -17,9 +17,3 @@ class Dice:
            
     def get_valor(self):
         return self.__valor__
-
-if __name__ == "__main__":
-    d = Dice()
-    print(d.roll()) 
-    print(d.get_valor())
-    print(d)
