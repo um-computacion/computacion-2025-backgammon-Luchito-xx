@@ -20,3 +20,9 @@ def test_roll_dobles():
     assert len(valores) in (2, 4)
     if len(valores) == 4:
         assert all(valor == valores[0] for valor in valores)
+
+def test_str_output():
+    d = Dice()
+    salida = str(d)
+    assert "Dado:" in salida
+    assert isinstance(salida, str)
