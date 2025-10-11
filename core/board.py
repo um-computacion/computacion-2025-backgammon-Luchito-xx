@@ -78,7 +78,7 @@ class Board:
         celda_origen = self.__celdas[celda]
         ficha_sacada = celda_origen.pop()
 
-        dst = self.__celdas[salto + celda]
+        dst = self.__celdas[destino]
         
         # Dentro de tablero
         if not dst:
