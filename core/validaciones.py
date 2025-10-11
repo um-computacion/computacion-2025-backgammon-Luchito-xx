@@ -20,9 +20,10 @@ class Validaciones:
     def validar_ficha_celda(ficha:list, jugador:str):
         if not ficha:
             raise CeldaInvalidaError("La celda no tiene fichas en juego")
-        if ficha[0].get_jugador() != jugador:
-            raise CeldaBloqueadaError("La celda contiene fichas de otro jugador")
         
+        if ficha[0].get_jugador() != jugador: 
+            raise CeldaBloqueadaError("La celda contiene fichas de otro jugador")
+
     @staticmethod
     def validar_destino(ficha_destino:list , jugador:str):
         if not ficha_destino:
