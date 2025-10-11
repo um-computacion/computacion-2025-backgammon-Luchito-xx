@@ -1,9 +1,12 @@
 
 """
 que hacer: 
-- mostrar tablero
+- mostrar tablero, dados, turno, movimientos pendientes
 - tira dados
 - intenta un movimiento simple (origen y pasos)
+- mostarar resultado
+- si error, mostrar error
+- fin
 """
 
 from core.backgammon import Backgammon
@@ -35,8 +38,6 @@ def main():
         game.mover(origen, salto)
         print("\nMovimiento aplicado\ntablero:\n")
         print(game.mostrar()["board"])
-        if game.mostrar().get("ganador"):
-            print("¡Ganadooor¡¡:", game.mostrar()["ganador"], ")")
     except ValidacionError as e:
         print("movimiento invalido:", e)
     except Exception as e:
