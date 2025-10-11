@@ -20,11 +20,13 @@ class Validaciones:
     def validar_ficha_celda(ficha:list, jugador:str):
         if not ficha:
             raise CeldaInvalidaError("La celda no tiene fichas en juego")
-        if ficha != jugador:
+        if ficha[0].get_jugador() != jugador:
             raise CeldaBloqueadaError("La celda contiene fichas de otro jugador")
         
     @staticmethod
     def validar_destino(ficha_destino:list , jugador:str):
+        if not ficha_destino:
+            return 
         if ficha_destino[0].get_jugador() != jugador and len(ficha_destino) >= 2: # Usar validar_salida?
             raise CeldaBloqueadaError(f"La celda destino de la ficha esta ocupada por {len(ficha_destino)} fichas enemigas")
     
@@ -112,3 +114,6 @@ class Validaciones:
 
         fichas_capturadas = sum(1 for ficha in capturas if ficha.get_jugador() == jugador)
         return(fichas_capturadas + fichas) == 0
+
+
+
