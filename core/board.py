@@ -1,10 +1,11 @@
-from ficha import Ficha
-from validaciones import *
+from .ficha import Ficha
+from .validaciones import *
+
 class Board:
     def __init__(self):
         
-        self.__celdas = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
-        self.__capturas = []  # Fichas capturadas
+        self.__celdas = [[] for _ in range(24)]  
+        self.__capturas = []  
 
 
     def inicio(self):
@@ -39,13 +40,26 @@ class Board:
     
     def get_board(self):
 
-        fila_superior = [f"{i:02}:{self.repr_celda(self.__celdas[i])} \n" for i in range(0,12)]
+        def c(i):
+            cel = self.__celdas[i]
+            return "--" if not cel else f"{cel[0].get_jugador()}{len(cel)}"
 
-        fila_inferior = [f"{i:02}:{self.repr_celda(self.__celdas[i])} \n" for i in range(12,24)]
+        top_idx    = range(12, 24)     
+        bottom_idx = range(11, -1, -1)  
+        w = 4  # ancho por columna (espaciado)
 
-        return "".join(fila_superior) + "\n" + "".join(fila_inferior) + "\n" #Poner las fichas capturadas
-        
-    
+        top_nums   = " ".join(f"{i+1:>{w-1}}" for i in top_idx)
+        top_cells  = " ".join(f"{c(i):>{w-1}}"    for i in top_idx)
+
+        # líneas centrales (dos '|' centradas) y línea de separación
+        center_space = " " * (w * 6)   # 12 columnas / 2 = 6
+        middle = center_space + "|\n" + center_space + "|\n" + "-" * (w * 12) + "\n"
+
+        bottom_nums  = " ".join(f"{i+1:>{w-1}}" for i in bottom_idx)
+        bottom_cells = " ".join(f"{c(i):>{w-1}}"    for i in bottom_idx)
+
+        return "\n".join([top_nums, top_cells, middle, bottom_nums, bottom_cells])
+
     def validar_movimiento(self, celda:int, salto:int, jugador:str):
         try:
             validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
@@ -103,9 +117,3 @@ if __name__ == "__main__":
     b.inicio()
     print(b.get_board())
     print(b.get_capturas())
-    try:
-        mov = b.mover(0,3,"X")
-        print(mov)
-        print(b.get_board())
-    except Exception as e:
-        print("error", e)
