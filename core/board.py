@@ -1,11 +1,11 @@
 from .ficha import Ficha
 from .validaciones import *
-
+from .exceptions import *
 class Board:
     def __init__(self):
         
-        self.__celdas = [[] for _ in range(24)]  
-        self.__capturas = []  
+        self.__celdas = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
+        self.__capturas = []  # Fichas capturadas
 
 
     def inicio(self):
@@ -44,22 +44,19 @@ class Board:
             cel = self.__celdas[i]
             return "--" if not cel else f"{cel[0].get_jugador()}{len(cel)}"
 
-        top_idx    = range(12, 24)     
-        bottom_idx = range(11, -1, -1)  
-        w = 4  # ancho por columna (espaciado)
+        nums_sup   = " ".join(f"{i+1:>{3}}" for i in range(12, 24) )
+        fichas_sup  = " ".join(f"{c(i):>{3}}" for i in range(11, -1, -1))
 
-        top_nums   = " ".join(f"{i+1:>{w-1}}" for i in top_idx)
-        top_cells  = " ".join(f"{c(i):>{w-1}}"    for i in top_idx)
+       
+        linea = " " * (4 * 6) + "|"
+        barra = (linea + "\n") * 2 + "-" * (4 * 12) + "\n" + linea + "\n" + linea
 
-        # líneas centrales (dos '|' centradas) y línea de separación
-        center_space = " " * (w * 6)   # 12 columnas / 2 = 6
-        middle = center_space + "|\n" + center_space + "|\n" + "-" * (w * 12) + "\n"
+        nums_inf  = " ".join(f"{i+1:>{3}}" for i in range(11, -1, -1))
+        fichas_inf = " ".join(f"{c(i):>{3}}" for i in range(11, -1, -1))
 
-        bottom_nums  = " ".join(f"{i+1:>{w-1}}" for i in bottom_idx)
-        bottom_cells = " ".join(f"{c(i):>{w-1}}"    for i in bottom_idx)
+        return "\n".join([nums_sup, fichas_sup, barra, fichas_inf, nums_inf])
 
-        return "\n".join([top_nums, top_cells, middle, bottom_nums, bottom_cells])
-
+    
     def validar_movimiento(self, celda:int, salto:int, jugador:str):
         try:
             validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
@@ -110,10 +107,3 @@ class Board:
         self.__celdas[destino].append(ficha_sacada)
 
         return True
-
-
-if __name__ == "__main__":
-    b = Board()
-    b.inicio()
-    print(b.get_board())
-    print(b.get_capturas())
