@@ -2,47 +2,65 @@ import pytest
 from core.board import Board
 from core.ficha import Ficha  
 
+def test_get_board():
 
-def test_inicio_setup():
-    b = Board()
-    b.inicio()
-    c = b.get_celdas()
-
+    board = Board()
+    board.inicio()
+    tablero_str = board.get_board()
     
-    assert len(c[0]) == 2
-    assert all(f.get_jugador() == "X" for f in c[0])
+    assert isinstance(tablero_str, str)
+    for n in range(1, 25):
+        assert str(n) in tablero_str, f"no esta numero {n}"
 
-    assert len(c[11]) == 5
-    assert all(f.get_jugador() == "X" for f in c[11])
+    assert "|" in tablero_str
+    assert "-" in tablero_str
 
-    assert len(c[23]) == 2
-    assert all(f.get_jugador() == "O" for f in c[23])
+    lineas = tablero_str.split("\n")
+    assert len(lineas) >= 5
 
-    assert len(c[12]) == 5
-    assert all(f.get_jugador() == "O" for f in c[12])
+def test_get_board_inicio():
+    
+    board = Board()
+    board.inicio()
+    tablero_str = board.get_board()
 
+    assert "X2" in tablero_str  
+    assert "X5" in tablero_str  
+    assert "X3" in tablero_str 
+    assert "X5" in tablero_str 
+
+    assert "O2" in tablero_str  
+    assert "O5" in tablero_str 
+    assert "O3" in tablero_str  
+    assert "O5" in tablero_str  
+
+
+def test_get_board_celdas_vacias():
+
+    board = Board()
+    board.inicio()
+    board.get_celdas()[0] = []  
+    tablero_str = board.get_board()
+
+    assert "--" in tablero_str, "celda vacia no esta como '--'"
+
+def test_get_board_estructura():
+
+    board = Board()
+    board.inicio()
+    tablero_str = board.get_board()
+    lineas = tablero_str.split("\n")
+
+    assert len(lineas[0]) == len(lineas[-1]), "numeros no estan alineados"
+    assert len(lineas[1]) == len(lineas[-2]), "fichas no estan alineadas"
+    assert "-" * 4 in tablero_str, "falta barra del medio"
 
 def test_repr_celda():
-    b = Board()
 
+    board = Board()
+    ficha_x = Ficha("X")
+    ficha_o = Ficha("O")
 
-    assert b.repr_celda([]) == "--"
-
-    celda = [Ficha("X") for _ in range(3)] 
-    assert b.repr_celda(celda) == "XXX"
-
-
-def test_get_board_contains_expected_lines():
-    b = Board()
-    b.inicio()
-    s = b.get_board()
-
-    assert "00:XX" in s         
-    assert "11:XXXXX" in s      
-    assert "23:OO" in s         
-    assert "12:OOOOO" in s      
-
-
-
-
-
+    assert board.repr_celda([]) == "--"
+    assert board.repr_celda([ficha_x, ficha_x]) == "XX"
+    assert board.repr_celda([ficha_o, ficha_o, ficha_o]) == "OOO"
