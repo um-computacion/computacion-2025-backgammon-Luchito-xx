@@ -77,3 +77,27 @@ def test_movimiento_valido_destino_fuera_validar_salida_ok():
     res = validaciones.Validaciones.movimiento_valido(celdas, 22, 3, "X", validar_salida=True)
     assert res is None
 
+
+# Victoria
+
+def test_validar_victoria_true():
+    '''
+    No hay fichas del jugador en el tablero ni en capturas
+    '''
+    celdas = crear_celdas_vacias()
+    capturas = []
+    assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is True
+
+
+def test_validar_victoria_false():
+    '''
+    Hay fichas del jugador en el tablero o en capturas
+    '''
+    celdas = crear_celdas_vacias()
+    celdas[0] = [Ficha("X")]
+    capturas = []
+    assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is False
+
+    celdas = crear_celdas_vacias()
+    capturas = [Ficha("X")]
+    assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is False
