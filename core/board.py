@@ -1,11 +1,11 @@
 from .ficha import Ficha
 from .validaciones import *
-from .exceptions import *
+
 class Board:
     def __init__(self):
         
-        self.__celdas = [[] for _ in range(24)]  # Cada celda es una tupla (jugador, numero de fichas)
-        self.__capturas = []  # Fichas capturadas
+        self.__celdas = [[] for _ in range(24)]  
+        self.__capturas = []  
 
 
     def inicio(self):
@@ -45,7 +45,7 @@ class Board:
             return "--" if not cel else f"{cel[0].get_jugador()}{len(cel)}"
 
         nums_sup   = " ".join(f"{i+1:>{3}}" for i in range(12, 24) )
-        fichas_sup  = " ".join(f"{c(i):>{3}}" for i in range(11, -1, -1))
+        fichas_sup  = " ".join(f"{c(i):>{3}}" for i in range(23, 11, -1))
 
        
         linea = " " * (4 * 6) + "|"
@@ -72,7 +72,6 @@ class Board:
 
         #Validar
         validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
-
         destino = Validaciones.movimiento_valido(self.__celdas, celda, salto, jugador, validar_salida = validar_salida)
         
         #Sacar de tablero
