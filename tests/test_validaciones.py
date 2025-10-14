@@ -77,6 +77,34 @@ def test_movimiento_valido_destino_fuera_validar_salida_ok():
     res = validaciones.Validaciones.movimiento_valido(celdas, 22, 3, "X", validar_salida=True)
     assert res is None
 
+# Salida (sacar fichas del tablero)
+
+def test_validar_salida_false_capturas():
+    '''
+    Todavia tiene fichas capturadas
+    '''
+    celdas = crear_celdas_vacias()
+    capturas = [Ficha("X")]
+    assert validaciones.Validaciones.validar_salida(celdas, capturas, "X") is False
+
+
+def test_validar_salida_false_fichas_en_home():
+    '''
+    Todavia tiene fichas en las zonas de bloqueo
+        - 0-17 para X
+        - 6-23 para O
+    '''
+    celdas = crear_celdas_vacias()
+    celdas[10] = [Ficha("X")]
+    capturas = []
+    assert validaciones.Validaciones.validar_salida(celdas, capturas, "X") is False
+
+
+def test_validar_salida_true():
+    '''
+    No tiene fichas capturadas ni en las zonas de bloqueo
+    '''
+    pass
 
 # Victoria
 
