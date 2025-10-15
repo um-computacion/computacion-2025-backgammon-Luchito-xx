@@ -80,7 +80,7 @@ class Validaciones:
         
         destino = celda + salto if jugador == "X" else celda - salto
 
-        if 0 <= celda <= 23:
+        if 0 <= destino <= 23:
             return False
         
         if jugador == "X":
