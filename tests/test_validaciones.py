@@ -118,13 +118,7 @@ def test_validar_salida_true_O():
     capturas = []
     assert validaciones.Validaciones.validar_salida(celdas, capturas, "O") is True
  
-# validar movimiento salida
 
-def test_movimiento_valido_salida():
-    celdas = crear_celdas_vacias()
-    celdas[22] = [Ficha("X")]
-    destino = validaciones.Validaciones.movimiento_valido(celdas, 22, 3, "X", validar_salida=True)
-    assert destino is None
 # Victoria
 
 def test_validar_victoria_true():
@@ -148,3 +142,31 @@ def test_validar_victoria_false():
     celdas = crear_celdas_vacias()
     capturas = [Ficha("X")]
     assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is False
+
+def test_validar_movimiento_salida_X_true():
+    celdas = [[] for _ in range(24)]
+    celdas[22] = [Ficha("X")]
+    capturas = []
+    # Solo hay fichas en home, intenta sacar desde la última posición
+    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 22, 2, "X") is True
+
+def test_validar_movimiento_salida_X_false_fichas_fuera_home():
+    celdas = [[] for _ in range(24)]
+    celdas[10] = [Ficha("X")]  # Ficha fuera de home
+    celdas[22] = [Ficha("X")]
+    capturas = []
+    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 22, 2, "X") is False
+
+def test_validar_movimiento_salida_O_true():
+    celdas = [[] for _ in range(24)]
+    celdas[1] = [Ficha("O")]
+    capturas = []
+    # Solo hay fichas en home, intenta sacar desde la primera posición
+    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 1, 2, "O") is True
+
+def test_validar_movimiento_salida_O_false_fichas_fuera_home():
+    celdas = [[] for _ in range(24)]
+    celdas[20] = [Ficha("O")]  # Ficha fuera de home
+    celdas[1] = [Ficha("O")]
+    capturas = []
+    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 1, 2, "O") is False
