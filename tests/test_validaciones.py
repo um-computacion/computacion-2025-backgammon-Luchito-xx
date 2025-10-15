@@ -104,8 +104,27 @@ def test_validar_salida_true():
     '''
     No tiene fichas capturadas ni en las zonas de bloqueo
     '''
-    pass
+    celdas = crear_celdas_vacias()
+    celdas[18] = [Ficha("X")]          
+    capturas = []
+    assert validaciones.Validaciones.validar_salida(celdas, capturas, "X") is True
 
+def test_validar_salida_true_O():
+    '''
+    No tiene fichas capturadas ni en las zonas de bloqueo
+    '''
+    celdas = crear_celdas_vacias()             
+    celdas[5] = [Ficha("O")]
+    capturas = []
+    assert validaciones.Validaciones.validar_salida(celdas, capturas, "O") is True
+ 
+# validar movimiento salida
+
+def test_movimiento_valido_salida():
+    celdas = crear_celdas_vacias()
+    celdas[22] = [Ficha("X")]
+    destino = validaciones.Validaciones.movimiento_valido(celdas, 22, 3, "X", validar_salida=True)
+    assert destino is None
 # Victoria
 
 def test_validar_victoria_true():
