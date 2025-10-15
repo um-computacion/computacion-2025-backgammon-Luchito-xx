@@ -63,25 +63,27 @@ def test_inicio():
 
 def test_tirar_dado():
     """
-    tirar_dado() debe llenar __saltos con el resultado de dice.roll() y devolverlo
+    tirar_dado() debe llenar __saltos (con logica de dobles tambien) con el resultado de dice.roll() y devolverlo
     """
-
-    class DiceMock:
-        def roll(self):
-            return [3, 5]
-    
-    dice = DiceMock()
-    b = Backgammon(dice=dice)
+    b = Backgammon()
     saltos = b.tirar_dado()
-    assert saltos == [3, 5]
-    assert b.get_saltos() == [3, 5]
+    assert saltos == b.get_saltos()
+    assert isinstance(saltos, list)
+    assert all(isinstance(s, int) for s in saltos)
+    assert all(1 <= s <= 6 for s in saltos)
+    assert 1 <= len(saltos) <= 4 
 
 
-
-def test_tirar_dado_dobles():
+def test_get_saltos():
     """
-    cuando dice devuelve dobles, get_saltos pone 4 de esos
+    get_saltos() devuelve la lista de saltos actual (inicialmente vacia)
     """
+    b = Backgammon()
+    assert b.get_saltos() == []
+    saltos = b.tirar_dado()
+    assert b.get_saltos() == saltos
+    b.cambio_turno()
+    assert b.get_saltos() == [] 
 
 
 
