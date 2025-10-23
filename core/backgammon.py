@@ -4,6 +4,21 @@ from .dice import Dice
 from .validaciones import *
 
 class Backgammon:
+    """Clase principal del juego de Backgammon.
+    Atributos
+    __board : Board
+        Representa el tablero de juego
+    __players : list[Player]
+        Lista de jugadores en el juego
+    __dice : Dice
+        Representa los dados del juego
+    __turno : int
+        Índice del jugador actual en la lista de jugadores
+    __saltos : list[int]
+        Lista de saltos disponibles para el jugador actual
+    __ganador : Player | None
+        Representa al jugador ganador, si lo hay   
+    """
     def __init__(self, board=None, players=None, dice=None):
         self.__board = board if board else Board()
         self.__players = players if players else [Player("X"), Player("O")]
@@ -13,22 +28,26 @@ class Backgammon:
         self.__ganador = None
 
     def inicio(self):
+        """Iniciar el juego de Backgammon"""
         self.__board.inicio()
         self.__turno = 0
         self.__saltos = []
     
     def tirar_dado(self):
+        """Tirar los dados y obtener los saltos disponibles"""
         self.__saltos = self.__dice.roll()
         return self.__saltos
     
     def get_saltos(self):
+        """Obtener los saltos disponibles para el jugador actual"""
         return list(self.__saltos)
     
     def get_jugador(self):
+        """Obtener el jugador actual"""
         return self.__players[self.__turno]
 
     def mover(self, celda:int, salto:int):
-        
+        """Mover una ficha en el tablero"""
         if not self.__saltos:
             raise ValueError("Tirar dados primero")
         
@@ -53,11 +72,13 @@ class Backgammon:
 
 
     def cambio_turno(self):
+        """Cambiar el turno al siguiente jugador"""
         self.__turno = 1 - self.__turno
         self.__saltos = []
 
 
     def mostrar(self):
+        """Mostrar el estado actual del juego"""
         return{
             "board": self.__board.get_board(),
             "turno": self.get_jugador().get_name(),
