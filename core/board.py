@@ -2,13 +2,25 @@ from .ficha import Ficha
 from .validaciones import *
 
 class Board:
+    """
+    class board -> Representa el tablero del juego de backgammon
+    
+    Atributos
+    __celdas : list
+        Lista de listas que representan las celdas del tablero y las fichas en cada cel
+    
+    __capturas : list
+        Lista de fichas capturadas (en la barra)
+    """
+    
     def __init__(self):
-        
+      
         self.__celdas = [[] for _ in range(24)]  
         self.__capturas = []  
 
 
     def inicio(self):
+        """    Inicializa el tablero con la configuración inicial de fichas"""
         self.__celdas = [[] for _ in range(24)]
         self.__capturas = []
 
@@ -24,22 +36,26 @@ class Board:
 
              
     def __str__(self):
+        """Representación del tablero como cadena de texto"""
         return f"Board: {self.__celdas}"
     
     def get_celdas(self):
+        """Devuelve las celdas del tablero"""
         return self.__celdas
 
     def get_capturas(self):
+        """Devuelve las fichas capturadas (en la barra)"""
         return self.__capturas
     
     def repr_celda(self, celda:list):
+        """Representación corta de una celda del tablero"""
         if not celda:
             return "--"
         jugador = celda[0].get_jugador()
         return f"{jugador * len(celda)}"
     
     def get_board(self):
-
+        """Representación visual del tablero"""
         def c(i):
             cel = self.__celdas[i]
             return "--" if not cel else f"{cel[0].get_jugador()}{len(cel)}"
@@ -58,6 +74,7 @@ class Board:
 
     
     def validar_movimiento(self, celda:int, salto:int, jugador:str):
+        """Valida si un movimiento es posible"""
         try:
             validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
             Validaciones.movimiento_valido (self.__celdas, celda, salto, jugador, validar_salida=validar_salida)
@@ -69,7 +86,7 @@ class Board:
 
 
     def mover(self, celda:int, salto:int, jugador:str):
-
+        """Realiza un movimiento en el tablero"""
         #Validar
         validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
         destino = Validaciones.movimiento_valido(self.__celdas, celda, salto, jugador, validar_salida = validar_salida)
