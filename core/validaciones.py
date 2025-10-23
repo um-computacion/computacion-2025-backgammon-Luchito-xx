@@ -1,23 +1,21 @@
 from .exceptions import *
 from .ficha import Ficha
 
-'''
-Validar: 
-        - Seleccion de ficha a mover (existe, es suya, seleccion dentro de tabla)
-        - Destino(¿sale de la tabla? o hay mas de 2 fichas contrarias)
-        - Movimiento -> True
-        - Sacar fichas de tabla?
-        - Victoria
-'''
 class Validaciones:
+    """
+    Clase de validaciones para el juego de backgammon.
+    Proporciona metodos estaticos para validar movimientos, celdas,
+    fichas y condiciones de victoria."""
 
     @staticmethod
     def validar_celda(celda:int):
+        """Valida que la celda este dentro del rango permitido (0-23)"""
         if not isinstance(celda,int) or celda < 0 or celda > 23:
             raise FueraDeRangoError(f"celda {celda} fuera del rango de la tabla (0-23)")
 
     @staticmethod
     def validar_ficha_celda(ficha:list, jugador:str):
+        """Valida que la celda tenga fichas y que sean del jugador correcto"""
         if not ficha:
             raise CeldaInvalidaError("La celda no tiene fichas en juego")
         
@@ -26,6 +24,7 @@ class Validaciones:
 
     @staticmethod
     def validar_destino(ficha_destino:list , jugador:str):
+        """Valida que la celda destino no este bloqueada por fichas enemigas"""
         if not ficha_destino:
             return 
         if ficha_destino[0].get_jugador() != jugador and len(ficha_destino) >= 2: # Usar validar_salida?
@@ -33,6 +32,7 @@ class Validaciones:
     
     @staticmethod
     def movimiento_valido(celdas:list, celda:int, saltos:int, jugador:str, validar_salida = False):
+        """Valida si un movimiento es valido y devuelve la celda destino."""
 
         Validaciones.validar_celda(celda)
         ficha = celdas[celda]
@@ -55,7 +55,7 @@ class Validaciones:
 
     @staticmethod
     def validar_salida(celdas:list, capturas:list, jugador:str):
-
+        """Valida si un jugador puede comenzar a sacar sus fichas del tablero"""
         for ficha in capturas:
             if ficha.get_jugador() == jugador:
                 return False
@@ -74,7 +74,7 @@ class Validaciones:
     
     @staticmethod
     def validar_movimiento_salida(celdas:list, capturas:list, celda:int, salto:int, jugador:str):
-
+        """Valida si un movimiento de salida es valido"""
         if not Validaciones.validar_salida(celdas,capturas,jugador):
             return False
         
@@ -105,6 +105,7 @@ class Validaciones:
         
     @staticmethod
     def validar_victoria(celdas: list, capturas:list, jugador: str):
+        """Valida si un jugador ha ganado la partida"""
         # Chequear
         fichas = 0
 
