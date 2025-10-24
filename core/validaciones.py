@@ -1,121 +1,101 @@
 from .exceptions import *
-from .ficha import Ficha
 
 class Validaciones:
     """
     Clase de validaciones para el juego de backgammon.
-    Proporciona metodos estaticos para validar movimientos, celdas,
-    fichas y condiciones de victoria."""
+    Proporciona metodos estaticos para validar movimientos y condicion de victoria"""
 
-    @staticmethod
-    def validar_celda(celda:int):
-        """Valida que la celda este dentro del rango permitido (0-23)"""
-        if not isinstance(celda,int) or celda < 0 or celda > 23:
-            raise FueraDeRangoError(f"celda {celda} fuera del rango de la tabla (0-23)")
+    @staticmethod 
+    def movimiento_valido(celdas:list, capturas, celda:int, salto:int, jugador:str):
+        """Valida si un movimiento es valido """
 
-    @staticmethod
-    def validar_ficha_celda(ficha:list, jugador:str):
-        """Valida que la celda tenga fichas y que sean del jugador correcto"""
-        if not ficha:
-            raise CeldaInvalidaError("La celda no tiene fichas en juego")
+        # Reingreso antes de usar otras fichas
+        if Validaciones._tiene_capturas(capturas, jugador):
+            if celda != -1:
+                raise FichasCapturadasError("Debes reingresar fichas capturadas primero")
+            return Validaciones._validar_reingreso(capturas, salto, jugador, celdas)
         
-        if ficha[0].get_jugador() != jugador: 
-            raise CeldaBloqueadaError("La celda contiene fichas de otro jugador")
-
-    @staticmethod
-    def validar_destino(ficha_destino:list , jugador:str):
-        """Valida que la celda destino no este bloqueada por fichas enemigas"""
-        if not ficha_destino:
-            return 
-        if ficha_destino[0].get_jugador() != jugador and len(ficha_destino) >= 2: # Usar validar_salida?
-            raise CeldaBloqueadaError(f"La celda destino de la ficha esta ocupada por {len(ficha_destino)} fichas enemigas")
-    
-    @staticmethod
-    def movimiento_valido(celdas:list, celda:int, saltos:int, jugador:str, validar_salida = False):
-        """Valida si un movimiento es valido y devuelve la celda destino."""
-
-        Validaciones.validar_celda(celda)
-        ficha = celdas[celda]
-
-        Validaciones.validar_ficha_celda(ficha, jugador)
+        # validar celda ingresada (origen)
+        if celda == -1:
+            raise FichasCapturadasError("No tienes fichas capturadas para reingresar")
         
-        destino = celda + saltos if jugador == "X" else celda - saltos 
+        if celda < 0 or celda > 23:
+            raise FueraDeRangoError(f"Celda {celda} fuera de rango")
         
-        if destino < 0 or destino > 23: 
-            if validar_salida:
-                return None
-            raise FueraDeRangoError(f"Destino {destino} fuera del rango de la tabla (0-23)")
-    
+        if not celdas[celda]:
+            raise CeldaInvalidaError("La celda está vacía")
         
-        ficha_destino = celdas[destino]
-        Validaciones.validar_destino(ficha_destino, jugador)
-
-        return destino
-
-
-    @staticmethod
-    def validar_salida(celdas:list, capturas:list, jugador:str):
-        """Valida si un jugador puede comenzar a sacar sus fichas del tablero"""
-        for ficha in capturas:
-            if ficha.get_jugador() == jugador:
-                return False
+        if celdas[celda][0].get_jugador() != jugador:
+            raise CeldaBloqueadaError("No es tu ficha")
         
-        if jugador == "X":
-            rango_salida = range(0,18)
-        else:
-            rango_salida = range(6, 24)
-        
-        for celda in rango_salida:
-            for ficha in celdas[celda]:
-                if ficha.get_jugador() == jugador:
-                    return False
-                
-        return True
-    
-    @staticmethod
-    def validar_movimiento_salida(celdas:list, capturas:list, celda:int, salto:int, jugador:str):
-        """Valida si un movimiento de salida es valido"""
-        if not Validaciones.validar_salida(celdas,capturas,jugador):
-            return False
-        
+        # calcular destino y validar
         destino = celda + salto if jugador == "X" else celda - salto
+        
+        # ver si sale del tablero (moviemiento de salida)
+        if destino < 0 or destino > 23:
+            return Validaciones.validar_salida(celdas, capturas, celda, salto, jugador)
+        
+        # validar destino
+        if celdas[destino] and celdas[destino][0].get_jugador() != jugador and len(celdas[destino]) >= 2:
+            raise CeldaBloqueadaError("Destino bloqueado por fichas enemigas")
+        
+        return True
 
-        if 0 <= destino <= 23:
-            return False
+    @staticmethod
+    def _tiene_capturas(capturas: list, jugador:str):
+        """verifica si tiene capturas"""
+        return any(f.get_jugador() == jugador for f in capturas)
+    
+    @staticmethod
+    def validar_salida(celdas: list, capturas: list, celda: int, salto: int, jugador: str):
+        """Valida si puede sacar fichas del tablero"""
+        # No puede tener capturas
+        if Validaciones._tiene_capturas(capturas, jugador):
+            raise FichasCapturadasError("No puedes sacar fichas teniendo capturas")
         
+        # Todas las fichas deben estar en casa
         if jugador == "X":
-            if destino == 24:
-                return  True
-            
-            for pos in range(celda + 1, 24):
-                for ficha in celdas[pos]:
+            rango_casa = range(18, 24)
+        else:
+            rango_casa = range(0, 6)
+        
+        for i in range(24):
+            if i not in rango_casa:
+                for ficha in celdas[i]:
                     if ficha.get_jugador() == jugador:
-                        return False
+                        raise SalidaInvalidaError("No todas tus fichas están en casa")
+        
+        # Si el dado te saca exactamente, ok
+        destino = celda + salto if jugador == "X" else celda - salto
+        if destino == 24 or destino == -1:
             return True
         
+        # Si el dado es mayor, verificar que no haya fichas más atrás
+        if jugador == "X":
+            for i in range(celda + 1, 24):
+                if celdas[i] and celdas[i][0].get_jugador() == jugador:
+                    raise SalidaInvalidaError("Tienes fichas mas atras")
         else:
-            if destino == -1:
-                return True
-            
-            for pos in range(0, celda):
-                for ficha in celdas[pos]:
-                    if ficha.get_jugador() == jugador:
-                        return False
-            return True
+            for i in range(0, celda):
+                if celdas[i] and celdas[i][0].get_jugador() == jugador:
+                    raise SalidaInvalidaError("Tienes fichas mas atrás")
+        
+        return True
         
     @staticmethod
     def validar_victoria(celdas: list, capturas:list, jugador: str):
         """Valida si un jugador ha ganado la partida"""
-        # Chequear
+        # fichas a contar
         fichas = 0
 
+        # contar fichas en el tablero
         for celda in range(24):
             for ficha in celdas[celda]:
                 if ficha.get_jugador() == jugador:
                     fichas += 1
 
+        # contar fichas capturadas
         fichas_capturadas = sum(1 for ficha in capturas if ficha.get_jugador() == jugador)
+        
+        # retornar si gano (true)
         return(fichas_capturadas + fichas) == 0
-
-
-
