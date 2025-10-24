@@ -4,9 +4,19 @@ from core.backgammon import Backgammon
 from core.board import Board
 from core.player import Player
 from core.dice import Dice
+from core.exceptions import *
 from core import validaciones 
 
-
+# Fake Dice para controlar resultados en tests
+class FakeDice:
+    def __init__(self, rolls):
+        # rolls: lista de listas [a,b] que roll() devolverá secuencialmente
+        self._rolls = list(rolls)
+    def roll(self):
+        if not self._rolls:
+            return [1, 2]
+        return self._rolls.pop(0)
+    
 # inicialización
 
 def test_init():
@@ -25,7 +35,7 @@ def test_init():
     assert isinstance(b._Backgammon__players[0], Player)
     assert isinstance(b._Backgammon__dice, Dice)
 
-    assert b._Backgammon__turno == 0
+    assert b._Backgammon__turno == None
     assert b.get_saltos() == []
     assert b._Backgammon__ganador is None
 
@@ -45,15 +55,24 @@ def test_init_injeccion_dep():
 
 
 
-def test_inicio():
+def test_inicio(monkeypatch):
     """
     inicio() debe invocar board.inicio(), resetear turno a 0 y limpiar saltos
     """
-    b = Backgammon()
-    b.tirar_dado() 
-    b.cambio_turno()  
+    class FakeDice:
+        def roll(self):
+            return [6, 1]  
+
+    b = Backgammon(dice=FakeDice())
+    setattr(b, "_Backgammon__turno", 1)
+    setattr(b, "_Backgammon__saltos", [2])
+
+    called = []
+    monkeypatch.setattr(b._Backgammon__board, "inicio", lambda: called.append(True))
+
     b.inicio()
 
+    assert called == [True]
     assert b._Backgammon__turno == 0
     assert b.get_saltos() == []
 
@@ -82,17 +101,45 @@ def test_get_saltos():
     assert b.get_saltos() == []
     saltos = b.tirar_dado()
     assert b.get_saltos() == saltos
+    b.turno_inicial()
     b.cambio_turno()
     assert b.get_saltos() == [] 
 
 
 
 # Turnos 
+
+def test_turno_inicial_X(capsys):
+    dice = FakeDice([[5, 3]])
+    g = Backgammon(dice=dice)
+    g.turno_inicial()
+    assert g._Backgammon__turno == 0
+    assert g.get_jugador().get_name() == "X"
+    out = capsys.readouterr().out
+    assert "Dados lanzados" in out
+
+def test_turno_inicial_O(capsys):
+    dice = FakeDice([[2, 4]])
+    g = Backgammon(dice=dice)
+    g.turno_inicial()
+    assert g._Backgammon__turno == 1
+    assert g.get_jugador().get_name() == "O"
+
+def test_turno_inicial_empate(capsys):
+    dice = FakeDice([[3, 3], [6, 1]])
+    g = Backgammon(dice=dice)
+    g.turno_inicial()
+    assert g._Backgammon__turno == 0  
+    out = capsys.readouterr().out
+    assert "Empate" in out
+
 def test_get_jugador_y_cambio_turno():
     """
-    get_jugador() al inicio devuelve player 0, cambio_turno alterna el turno y limpia saltos.
+    get_jugador() devuelve el jugador actual, cambio_turno alterna el turno y limpia saltos.
     """
+
     b = Backgammon()
+    setattr(b, "_Backgammon__turno", 0)
 
     j0 = b.get_jugador()
     assert isinstance(j0, Player)
@@ -107,29 +154,31 @@ def test_get_jugador_y_cambio_turno():
     assert b.get_jugador().get_name() == "X"
     assert b.get_saltos() == []
 
-# Mostrar ()
-def test_mostrar():
-    """
-    mostrar() devuelve dict con claves:
-      - 'board': str (resultado de board.get_board())
-      - 'turno': str (nombre del jugador actual)
-      - 'saltos': list (resultado de get_saltos())
-      - 'capturas': list (representación de las fichas capturadas)
-      - 'ganador': None o Player 
-    """
-    pass
 
 # Mover...
 
-def test_mover_raises_if_no_saltos():
-    '''
-    si no hay saltos (no se han tirado dados) mover() debe raise
-    '''
+def test_mover_invoca_board_y_consumo_salto(monkeypatch):
+    """
+    mover() debe invocar board.mover(...) si la validacion lo permite
+    y consumir el salto utilizado.
+    """
     b = Backgammon()
-    with pytest.raises(ValueError, match="Tirar dados primero"):
-        b.mover(0, 3)
+    setattr(b, "_Backgammon__turno", 0)
+    setattr(b, "_Backgammon__saltos", [3])
 
-# Victoria...
+    called = []
+    def fake_board_mover(celda, salto, jugador):
+        called.append((celda, salto, jugador))
+
+    # parchear el board del objeto
+    b._Backgammon__board.mover = fake_board_mover
+    # forzar validacion positiva
+    monkeypatch.setattr(validaciones.Validaciones, "movimiento_valido", lambda *args, **kwargs: True)
+
+    b.mover(5, 3)
+
+    assert called == [(5, 3, "X")]
+    assert b.get_saltos() == []
 
 
 
