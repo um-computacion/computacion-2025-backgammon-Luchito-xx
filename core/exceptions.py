@@ -10,3 +10,12 @@ class ValidacionError(Exception):
 class CeldaBloqueadaError(Exception):
     pass
 
+class FichasCapturadasError(Exception):
+    pass
+
+class SalidaInvalidaError(Exception):
+    pass
+
+class SaltosError(Exception):
+    pass
+
