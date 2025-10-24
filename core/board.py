@@ -47,6 +47,13 @@ class Board:
         """Devuelve las fichas capturadas (en la barra)"""
         return self.__capturas
     
+    def tiene_capturadas(self, jugador:str) -> bool:
+        """Verifica si un jugador tiene fichas capturadas"""
+        for ficha in self.__capturas:
+            if ficha.get_jugador() == jugador:
+                return True
+        return False
+    
     def repr_celda(self, celda:list):
         """Representación corta de una celda del tablero"""
         if not celda:
@@ -60,66 +67,66 @@ class Board:
             cel = self.__celdas[i]
             return "--" if not cel else f"{cel[0].get_jugador()}{len(cel)}"
 
-        nums_sup   = " ".join(f"{i+1:>{3}}" for i in range(12, 24) )
-        fichas_sup  = " ".join(f"{c(i):>{3}}" for i in range(23, 11, -1))
+        nums_sup   = " ".join(f"{i:>{3}}" for i in range(12, 24) )
+        fichas_sup = " ".join(f"{c(i):>{3}}" for i in range(12, 24))
 
        
         linea = " " * (4 * 6) + "|"
         barra = (linea + "\n") * 2 + "-" * (4 * 12) + "\n" + linea + "\n" + linea
 
-        nums_inf  = " ".join(f"{i+1:>{3}}" for i in range(11, -1, -1))
+        nums_inf  = " ".join(f"{i:>{3}}" for i in range(11, -1, -1))
         fichas_inf = " ".join(f"{c(i):>{3}}" for i in range(11, -1, -1))
+
+        cap_x= sum(1 for f in self.__capturas if f.get_jugador() == "X")
+        cap_o= sum(1 for f in self.__capturas if f.get_jugador() == "O")
+
+        if cap_x > 0:
+            fichas_sup += f"   Capturadas X: {cap_x}"
+        if cap_o > 0:
+            fichas_inf += f"   Capturadas O: {cap_o}"
 
         return "\n".join([nums_sup, fichas_sup, barra, fichas_inf, nums_inf])
 
-    
-    def validar_movimiento(self, celda:int, salto:int, jugador:str):
-        """Valida si un movimiento es posible"""
-        try:
-            validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
-            Validaciones.movimiento_valido (self.__celdas, celda, salto, jugador, validar_salida=validar_salida)
-
-            return True
-        except Exception:
-            return False
-
-
-
-    def mover(self, celda:int, salto:int, jugador:str):
-        """Realiza un movimiento en el tablero"""
-        #Validar
-        validar_salida = Validaciones.validar_salida(self.__celdas, self.__capturas, jugador)
-        destino = Validaciones.movimiento_valido(self.__celdas, celda, salto, jugador, validar_salida = validar_salida)
+    def mover(self, celda, salto, jugador):
+        """Mueve una ficha en el tablero (reingreso, salida o movimiento normal)"""
         
-        #Sacar de tablero
-        if destino is None:
-            if Validaciones.validar_movimiento_salida(self.__celdas, self.__capturas, celda, salto, jugador):
-                celda_origen = self.__celdas[celda]
-                ficha_sacada = celda_origen.pop()
-                
-                return True
-            else: 
-                raise FueraDeRangoError("No se pueden sacar fichas del tablero")
+        # Reingreso de barra
+        if celda == -1:
+            destino = salto - 1 if jugador == "X" else 24 - salto
             
+            # Sacar de capturas
+            ficha = None
+            for i, f in enumerate(self.__capturas):
+                if f.get_jugador() == jugador:
+                    ficha = self.__capturas.pop(i)
+                    ficha.set_capturada(False)
+                    break
+            
+            # Capturar ficha enemiga si hay una sola
+            if self.__celdas[destino] and len(self.__celdas[destino]) == 1 and self.__celdas[destino][0].get_jugador() != jugador:
+                enemiga = self.__celdas[destino].pop()
+                enemiga.set_capturada(True)
+                self.__capturas.append(enemiga)
+            
+            # Colocar ficha
+            self.__celdas[destino].append(ficha)
+            return
         
-        celda_origen = self.__celdas[celda]
-        ficha_sacada = celda_origen.pop()
+        # sacar de tablero
+        destino = celda + salto if jugador == "X" else celda - salto
 
-        dst = self.__celdas[destino]
+        # Tomar ficha origen
+        ficha_sacada = self.__celdas[celda].pop()
+
+        if destino < 0 or destino > 23:
+            return
         
-        # Dentro de tablero
-        if not dst:
-            self.__celdas[destino].append(ficha_sacada)
-            return True
+        # movimiento normal 
+        # Capturar si hay UNA ficha enemiga
+        if self.__celdas[destino] and len(self.__celdas[destino]) == 1 and self.__celdas[destino][0].get_jugador() != jugador:
+            enemiga = self.__celdas[destino].pop()
+            enemiga.set_capturada(True)
+            self.__capturas.append(enemiga)
         
-        #Ficha propia
-        if dst[0].get_jugador() == jugador:
-            self.__celdas[destino].append(ficha_sacada)
-            return True
-        
-        # Captura ficha
-        capturada = dst.pop()
-        capturada.set_capturada()
+        # Colocar ficha sin capturar
         self.__celdas[destino].append(ficha_sacada)
-
-        return True
