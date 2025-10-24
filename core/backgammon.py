@@ -4,6 +4,7 @@ from .dice import Dice
 from .validaciones import *
 from .exceptions import *
 
+
 class Backgammon:
     """Clase principal del juego de Backgammon.
     Atributos
