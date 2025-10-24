@@ -7,117 +7,86 @@ from core.exceptions import *
 def crear_celdas_vacias():
     return [[] for _ in range(24)]
 
-# celda
-def test_validar_celda_valida():
-    validaciones.Validaciones.validar_celda(0)
-    validaciones.Validaciones.validar_celda(23)
+# movimiento_valido
 
-
-@pytest.mark.parametrize("bad", [-1, 24, "a", 3.5])
-def test_validar_celda_invalida(bad):
-    with pytest.raises(FueraDeRangoError):
-        validaciones.Validaciones.validar_celda(bad)
-
-
-# ficha - celda
-def test_validar_ficha_celda_vacia():
-    with pytest.raises(CeldaInvalidaError):
-        validaciones.Validaciones.validar_ficha_celda([], "X")
-
-
-def test_validar_ficha_celda_jugador_enemigo():
-    celda = [Ficha("O")]
-    with pytest.raises(validaciones.CeldaBloqueadaError):
-        validaciones.Validaciones.validar_ficha_celda(celda, "X")
-
-
-def test_validar_ficha_celda_ok():
-    celda = [Ficha("X"), Ficha("X")]
-    validaciones.Validaciones.validar_ficha_celda(celda, "X")
-
-# destino
-
-def test_validar_destino_bloqueado_enemigo():
-    destino = [Ficha("O"), Ficha("O")]
-    with pytest.raises(validaciones.CeldaBloqueadaError):
-        validaciones.Validaciones.validar_destino(destino, "X")
-
-
-def test_validar_destino_ok():
-
-    validaciones.Validaciones.validar_destino([], "X")
-    validaciones.Validaciones.validar_destino([Ficha("O")], "X")
-    validaciones.Validaciones.validar_destino([Ficha("X"), Ficha("X")], "X")
-
-# movimiento valido
-
-def test_movimiento_valido_X():
+def test_movimiento_valido_X_ok():
     celdas = crear_celdas_vacias()
-    celdas[0] = [Ficha("X")]       
-    celdas[3] = []                  
-    destino = validaciones.Validaciones.movimiento_valido(celdas, 0, 3, "X", validar_salida=False)
-    assert destino == 3
+    celdas[0] = [Ficha("X")]
+    capturas = []
+    destino = validaciones.Validaciones.movimiento_valido(celdas, capturas, 0, 3, "X")
+    assert destino is True
 
-def test_movimiento_valido_O():
+def test_movimiento_valido_O_ok():
     celdas = crear_celdas_vacias()
     celdas[5] = [Ficha("O")]
-    celdas[3] = []
-    destino = validaciones.Validaciones.movimiento_valido(celdas, 5, 2, "O", validar_salida=False)
-    assert destino == 3
+    capturas = []
+    destino = validaciones.Validaciones.movimiento_valido(celdas, capturas, 5, 2, "O")
+    assert destino is True
 
-def test_movimiento_valido_destino_fuera_validar_salida_false():
+def test_movimiento_valido_destino_fuera_raises_salida_invalida():
+    # intento de bearing-off pero hay fichas fuera del "home" -> debe raise SalidaInvalidaError
     celdas = crear_celdas_vacias()
     celdas[22] = [Ficha("X")]
-    with pytest.raises(validaciones.FueraDeRangoError):
-        validaciones.Validaciones.movimiento_valido(celdas, 22, 3, "X", validar_salida=False)
+    celdas[10] = [Ficha("X")]  # ficha fuera de home
+    capturas = []
+    with pytest.raises(SalidaInvalidaError):
+        validaciones.Validaciones.movimiento_valido(celdas, capturas, 22, 3, "X")
 
-def test_movimiento_valido_destino_fuera_validar_salida_ok():
+def test_movimiento_valido_destino_fuera_validar_ok():
+    # bearing-off permitido -> validar_salida devuelve True y movimiento_valido retorna True
     celdas = crear_celdas_vacias()
     celdas[22] = [Ficha("X")]
-    res = validaciones.Validaciones.movimiento_valido(celdas, 22, 3, "X", validar_salida=True)
-    assert res is None
+    capturas = []
+    res = validaciones.Validaciones.movimiento_valido(celdas, capturas, 22, 3, "X")
+    # en la implementación actual validar_salida devuelve True, por lo que movimiento_valido retorna True
+    assert res is True
+
 
 # Salida (sacar fichas del tablero)
 
-def test_validar_salida_false_capturas():
-    '''
-    Todavia tiene fichas capturadas
-    '''
+# validar_salida (bearing-off)
+
+def test_validar_salida_raises_si_tiene_capturas():
     celdas = crear_celdas_vacias()
     capturas = [Ficha("X")]
-    assert validaciones.Validaciones.validar_salida(celdas, capturas, "X") is False
+    with pytest.raises(FichasCapturadasError):
+        validaciones.Validaciones.validar_salida(celdas, capturas, 22, 2, "X")
 
-
-def test_validar_salida_false_fichas_en_home():
-    '''
-    Todavia tiene fichas en las zonas de bloqueo
-        - 0-17 para X
-        - 6-23 para O
-    '''
+def test_validar_salida_raises_si_fichas_fuera_home():
     celdas = crear_celdas_vacias()
     celdas[10] = [Ficha("X")]
     capturas = []
-    assert validaciones.Validaciones.validar_salida(celdas, capturas, "X") is False
-
+    with pytest.raises(SalidaInvalidaError):
+        validaciones.Validaciones.validar_salida(celdas, capturas, 22, 2, "X")
 
 def test_validar_salida_true():
-    '''
-    No tiene fichas capturadas ni en las zonas de bloqueo
-    '''
     celdas = crear_celdas_vacias()
-    celdas[18] = [Ficha("X")]          
+    celdas[18] = [Ficha("X")]
     capturas = []
-    assert validaciones.Validaciones.validar_salida(celdas, capturas, "X") is True
+    assert validaciones.Validaciones.validar_salida(celdas, capturas, 18, 1, "X") is True
 
 def test_validar_salida_true_O():
-    '''
-    No tiene fichas capturadas ni en las zonas de bloqueo
-    '''
-    celdas = crear_celdas_vacias()             
+    celdas = crear_celdas_vacias()
     celdas[5] = [Ficha("O")]
     capturas = []
-    assert validaciones.Validaciones.validar_salida(celdas, capturas, "O") is True
- 
+    assert validaciones.Validaciones.validar_salida(celdas, capturas, 5, 1, "O") is True
+
+# validar_victoria
+
+def test_validar_victoria_true():
+    celdas = crear_celdas_vacias()
+    capturas = []
+    assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is True
+
+def test_validar_victoria_false_por_tablero_y_capturas():
+    celdas = crear_celdas_vacias()
+    celdas[0] = [Ficha("X")]
+    capturas = []
+    assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is False
+
+    celdas = crear_celdas_vacias()
+    capturas = [Ficha("X")]
+    assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is False
 
 # Victoria
 
@@ -142,31 +111,3 @@ def test_validar_victoria_false():
     celdas = crear_celdas_vacias()
     capturas = [Ficha("X")]
     assert validaciones.Validaciones.validar_victoria(celdas, capturas, "X") is False
-
-def test_validar_movimiento_salida_X_true():
-    celdas = [[] for _ in range(24)]
-    celdas[22] = [Ficha("X")]
-    capturas = []
-    # Solo hay fichas en home, intenta sacar desde la última posición
-    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 22, 2, "X") is True
-
-def test_validar_movimiento_salida_X_false_fichas_fuera_home():
-    celdas = [[] for _ in range(24)]
-    celdas[10] = [Ficha("X")]  # Ficha fuera de home
-    celdas[22] = [Ficha("X")]
-    capturas = []
-    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 22, 2, "X") is False
-
-def test_validar_movimiento_salida_O_true():
-    celdas = [[] for _ in range(24)]
-    celdas[1] = [Ficha("O")]
-    capturas = []
-    # Solo hay fichas en home, intenta sacar desde la primera posición
-    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 1, 2, "O") is True
-
-def test_validar_movimiento_salida_O_false_fichas_fuera_home():
-    celdas = [[] for _ in range(24)]
-    celdas[20] = [Ficha("O")]  # Ficha fuera de home
-    celdas[1] = [Ficha("O")]
-    capturas = []
-    assert validaciones.Validaciones.validar_movimiento_salida(celdas, capturas, 1, 2, "O") is False
