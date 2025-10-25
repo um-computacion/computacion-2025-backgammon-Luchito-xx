@@ -72,14 +72,14 @@ class BackgammonCLI:
                 print("\nTurno completado")
                 return False  # Cambiar turno
                 
-        except ValueError as e:
-            print(f"Error: {e}")
-            return True
-        except (FueraDeRangoError, CeldaInvalidaError, ValidacionError, CeldaBloqueadaError, FichasCapturadasError, SalidaInvalidaError, SaltosError) as e:
+        except BackgammonError as e:
+            # Error esperado del dominio
             print(f"Movimiento inválido: {e}")
             return True
+
         except Exception as e:
-            print(f"Error inesperado: {e}")
+            # Error inesperado: mostramos tipo y mensaje
+            print(f"Error inesperado ({e.__class__.__name__}): {e}")
             return True
     
     def jugar(self):
