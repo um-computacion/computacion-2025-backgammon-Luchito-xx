@@ -107,7 +107,12 @@ class BackgammonCLI:
                 dados = self.game.tirar_dado()
                 print(f"   Resultado: {dados}")
                 
-
+                
+            # Verificar si puede mover
+            if not self.game.puede_mover():
+                print("\nNo tienes movimientos posibles. paso turno...")
+                self.game.cambio_turno()
+                continue
 
             # Obtener movimiento
             entrada = self.obtener_movimiento()

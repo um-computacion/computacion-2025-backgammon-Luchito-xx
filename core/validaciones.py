@@ -99,3 +99,32 @@ class Validaciones:
         
         # retornar si gano (true)
         return(fichas_capturadas + fichas) == 0
+
+    @staticmethod
+    def puede_mover(celdas: list, capturas: list, saltos: list, jugador: str) -> bool:
+        """Devuelve True si el jugador tiene al menos un movimiento válido."""
+        
+        # Si no hay dados, no puede mover
+        if not saltos:
+            return False
+        
+        # Si hay capturadas, solo se prueban reingresos (-1)
+        if Validaciones._tiene_capturas(capturas, jugador):
+            for salto in saltos:
+                try:
+                    if Validaciones.movimiento_valido(celdas, capturas, -1, salto, jugador):
+                        return True
+                except Exception:
+                    continue
+            return False
+        
+        # Si no hay capturadas, probar todos los orígenes y saltos disponibles
+        for salto in saltos:
+            for origen in range(24):
+                try:
+                    if Validaciones.movimiento_valido(celdas, capturas, origen, salto, jugador):
+                        return True
+                except Exception:
+                    continue
+        
+        return False

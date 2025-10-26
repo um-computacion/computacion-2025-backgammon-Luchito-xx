@@ -110,6 +110,14 @@ class Backgammon:
         self.__turno = 1 - self.__turno
         self.__saltos = []
 
+    def puede_mover(self):
+        """Verificar si el jugador actual puede mover"""
+        return Validaciones.puede_mover(
+            celdas=self.__board.get_celdas(),
+            capturas=self.__board.get_capturas(),
+            saltos=self.__saltos,
+            jugador=self.get_jugador().get_name()
+        )
 
     def mostrar(self):
         """Mostrar el estado actual del juego"""
