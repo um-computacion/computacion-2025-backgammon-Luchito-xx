@@ -22,6 +22,14 @@ class FichasCapturadasError(BackgammonError):
     """Operación inválida cuando el jugador tiene fichas en la barra."""
     pass
 
+class SinFichasCapturadas(BackgammonError):
+    """No hay fichas capturadas para reingresar."""
+    pass
+
+class ReingresoInvalidoError(BackgammonError):
+    """No se puede reingresar una ficha capturada (destino inválido)."""
+    pass
+
 class SalidaInvalidaError(BackgammonError):
     """No se puede sacar fichas (condición de salida no cumplida)."""
     pass

@@ -107,8 +107,6 @@ class BackgammonCLI:
                 dados = self.game.tirar_dado()
                 print(f"   Resultado: {dados}")
                 
-
-
             # Obtener movimiento
             entrada = self.obtener_movimiento()
             resultado = self.movimiento(entrada)
