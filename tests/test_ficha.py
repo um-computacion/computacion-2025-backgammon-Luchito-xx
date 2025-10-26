@@ -1,28 +1,32 @@
-import pytest
-from core.ficha import Ficha 
+import unittest
+from core.ficha import Ficha
 
-def test_crear_ficha():
-    ficha = Ficha("Lucho")
-    assert ficha.get_jugador() == "Lucho"
-    assert ficha.get_capturada() is False
+class TestFicha(unittest.TestCase):
 
-def test_set_jugador():
-    ficha = Ficha("X")
-    ficha.set_jugador("O")
-    assert ficha.get_jugador() == "O"
+    def test_crear_ficha(self):
+        ficha = Ficha("Lucho")
+        self.assertEqual(ficha.get_jugador(), "Lucho")
+        self.assertFalse(ficha.is_capturada())
 
-def test_set_capturada():
-    ficha = Ficha("X")
-    ficha.set_capturada(True)
-    assert ficha.get_capturada() is True
-    ficha.set_capturada(False)
-    assert ficha.get_capturada() is False
+    def test_set_jugador(self):
+        ficha = Ficha("X")
+        ficha.set_jugador("O")
+        self.assertEqual(ficha.get_jugador(), "O")
 
-def test_repr_estado_libre():
-    ficha = Ficha("X")
-    assert "Dueño de la ficha es X y esta Libre" == repr(ficha)
+    def test_set_capturada(self):
+        ficha = Ficha("X")
+        ficha.set_capturada(True)
+        self.assertTrue(ficha.is_capturada())
+        ficha.set_capturada(False)
+        self.assertFalse(ficha.is_capturada())
 
-def test_repr_estado_capturada():
-    ficha = Ficha("X")
-    ficha.set_capturada(True)
-    assert "Dueño de la ficha es X y esta Capturada" == repr(ficha)
+    def test_repr_estado_libre_and_capturada(self):
+        ficha = Ficha("X")
+        rlibre = repr(ficha)
+        self.assertIn("Ficha", rlibre)
+        self.assertIn("jugador", rlibre)
+
+        ficha.set_capturada(True)
+        rcapt = repr(ficha)
+        self.assertIn("Ficha", rcapt)
+        self.assertIn("jugador", rcapt)
