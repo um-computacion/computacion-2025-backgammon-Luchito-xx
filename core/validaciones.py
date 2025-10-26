@@ -10,10 +10,10 @@ class Validaciones:
         """Valida si un movimiento es valido """
 
         # Reingreso antes de usar otras fichas
-        if Validaciones._tiene_capturas(capturas, jugador):
+        if Validaciones.tiene_capturas(capturas, jugador):
             if celda != -1:
                 raise FichasCapturadasError("Debes reingresar fichas capturadas primero")
-            return Validaciones._validar_reingreso(capturas, salto, jugador, celdas)
+            return Validaciones.validar_reingreso(capturas, salto, jugador, celdas)
         
         # validar celda ingresada (origen)
         if celda == -1:
@@ -42,15 +42,45 @@ class Validaciones:
         return True
 
     @staticmethod
-    def _tiene_capturas(capturas: list, jugador:str):
+    def tiene_capturas(capturas: list, jugador:str):
         """verifica si tiene capturas"""
         return any(f.get_jugador() == jugador for f in capturas)
+
+    @staticmethod
+    def validar_reingreso(capturas: list, salto: int, jugador: str, celdas: list) -> bool:
+        """Valida el reingreso de una ficha capturada"""
+        
+        # Verificar que tiene fichas capturadas
+        if not Validaciones.tiene_capturas(capturas, jugador):
+            raise SinFichasCapturadas()
+        
+        # Calcular posición de entrada
+        if jugador == "X":
+            destino = salto - 1  
+        else:
+            destino = 24 - salto  
+
+        # Validar que el destino esté en rango
+        if destino < 0 or destino > 23:
+            raise ReingresoInvalidoError(
+                f"El dado {salto} no permite reingresar (destino fuera del tablero)"
+            )
+        
+        # Validar que el destino no esté bloqueado
+        if celdas[destino]:
+            if celdas[destino][0].get_jugador() != jugador and len(celdas[destino]) >= 2:
+                raise CeldaBloqueadaError(
+                    destino, 
+                    f"No puedes reingresar en celda {destino}: bloqueada por fichas enemigas"
+                )
+        
+        return True
     
     @staticmethod
     def validar_salida(celdas: list, capturas: list, celda: int, salto: int, jugador: str):
         """Valida si puede sacar fichas del tablero"""
         # No puede tener capturas
-        if Validaciones._tiene_capturas(capturas, jugador):
+        if Validaciones.tiene_capturas(capturas, jugador):
             raise FichasCapturadasError("No puedes sacar fichas teniendo capturas")
         
         # Todas las fichas deben estar en casa
@@ -109,7 +139,7 @@ class Validaciones:
             return False
         
         # Si hay capturadas, solo se prueban reingresos (-1)
-        if Validaciones._tiene_capturas(capturas, jugador):
+        if Validaciones.tiene_capturas(capturas, jugador):
             for salto in saltos:
                 try:
                     if Validaciones.movimiento_valido(celdas, capturas, -1, salto, jugador):
