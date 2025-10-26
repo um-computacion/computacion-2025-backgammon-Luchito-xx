@@ -1,6 +1,5 @@
-# File: tests/test_validaciones_unittest.py
 import unittest
-from core import validaciones as validaciones_module
+from core import validaciones
 from core.ficha import Ficha
 from core.exceptions import *
 
@@ -15,7 +14,7 @@ class TestValidaciones(unittest.TestCase):
         celdas = crear_celdas_vacias()
         celdas[0] = [Ficha("X")]
         capturas = []
-        destino = validaciones_module.Validaciones.movimiento_valido(
+        destino = validaciones.Validaciones.movimiento_valido(
             celdas, capturas, 0, 3, "X"
         )
         self.assertTrue(destino)
@@ -24,7 +23,7 @@ class TestValidaciones(unittest.TestCase):
         celdas = crear_celdas_vacias()
         celdas[5] = [Ficha("O")]
         capturas = []
-        destino = validaciones_module.Validaciones.movimiento_valido(
+        destino = validaciones.Validaciones.movimiento_valido(
             celdas, capturas, 5, 2, "O"
         )
         self.assertTrue(destino)
@@ -35,7 +34,7 @@ class TestValidaciones(unittest.TestCase):
         celdas[10] = [Ficha("X")]
         capturas = []
         with self.assertRaises(SalidaInvalidaError):
-            validaciones_module.Validaciones.movimiento_valido(
+            validaciones.Validaciones.movimiento_valido(
                 celdas, capturas, 22, 3, "X"
             )
 
@@ -43,7 +42,7 @@ class TestValidaciones(unittest.TestCase):
         celdas = crear_celdas_vacias()
         capturas = [Ficha("X")]
         with self.assertRaises(FichasCapturadasError):
-            validaciones_module.Validaciones.validar_salida(
+            validaciones.Validaciones.validar_salida(
                 celdas, capturas, 22, 2, "X"
             )
 
@@ -52,7 +51,7 @@ class TestValidaciones(unittest.TestCase):
         celdas[10] = [Ficha("X")]
         capturas = []
         with self.assertRaises(SalidaInvalidaError):
-            validaciones_module.Validaciones.validar_salida(
+            validaciones.Validaciones.validar_salida(
                 celdas, capturas, 22, 2, "X"
             )
 
@@ -61,7 +60,7 @@ class TestValidaciones(unittest.TestCase):
         celdas[18] = [Ficha("X")]
         capturas = []
         self.assertTrue(
-            validaciones_module.Validaciones.validar_salida(celdas, capturas, 18, 1, "X")
+            validaciones.Validaciones.validar_salida(celdas, capturas, 18, 1, "X")
         )
 
     def test_validar_salida_true_O(self):
@@ -69,37 +68,37 @@ class TestValidaciones(unittest.TestCase):
         celdas[5] = [Ficha("O")]
         capturas = []
         self.assertTrue(
-            validaciones_module.Validaciones.validar_salida(celdas, capturas, 5, 1, "O")
+            validaciones.Validaciones.validar_salida(celdas, capturas, 5, 1, "O")
         )
 
     def test_validar_victoria_true(self):
         celdas = crear_celdas_vacias()
         capturas = []
-        self.assertTrue(validaciones_module.Validaciones.validar_victoria(celdas, capturas, "X"))
+        self.assertTrue(validaciones.Validaciones.validar_victoria(celdas, capturas, "X"))
 
     def test_validar_victoria_false_por_tablero_y_capturas(self):
         celdas = crear_celdas_vacias()
         celdas[0] = [Ficha("X")]
         capturas = []
-        self.assertFalse(validaciones_module.Validaciones.validar_victoria(celdas, capturas, "X"))
+        self.assertFalse(validaciones.Validaciones.validar_victoria(celdas, capturas, "X"))
 
         celdas = crear_celdas_vacias()
         capturas = [Ficha("X")]
-        self.assertFalse(validaciones_module.Validaciones.validar_victoria(celdas, capturas, "X"))
+        self.assertFalse(validaciones.Validaciones.validar_victoria(celdas, capturas, "X"))
 
     def test_puede_mover_true(self):
         celdas = crear_celdas_vacias()
         celdas[0] = [Ficha("X")]
         capturas = []
         saltos = [1, 2, 3]
-        self.assertTrue(validaciones_module.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
+        self.assertTrue(validaciones.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
 
     def test_puede_mover_false_no_saltos(self):
         celdas = crear_celdas_vacias()
         celdas[0] = [Ficha("X")]
         capturas = []
         saltos = []
-        self.assertFalse(validaciones_module.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
+        self.assertFalse(validaciones.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
 
     def test_puede_mover_false_no_movimientos_validos(self):
         celdas = crear_celdas_vacias()
@@ -107,4 +106,11 @@ class TestValidaciones(unittest.TestCase):
         celdas[0] = [Ficha("X")]
         capturas = []
         saltos = [1, 1]
-        self.assertFalse(validaciones_module.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
+        self.assertFalse(validaciones.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
+
+    def test_puede_mover_false_capturas_sin_reingreso(self):
+        celdas = crear_celdas_vacias()
+        celdas[0] = [Ficha("O"), Ficha("O")]
+        capturas = [Ficha("X")]
+        saltos = [1]
+        self.assertFalse(validaciones.Validaciones.puede_mover(celdas, capturas, saltos, "X"))
