@@ -4,6 +4,7 @@
 ```text
 Name                   Stmts   Miss  Cover   Missing
 ----------------------------------------------------
+core/__init__.py           0      0   100%
 core/dice.py              14      0   100%
 core/player.py             9      0   100%
 tests/test_dice.py        26      1    96%   31
@@ -15,13 +16,13 @@ TOTAL                     64      1    98%
 
 ## Pylint Report
 ```text
-************* Module main
+************* Module core.main
 core/main.py:2:0: C0304: Final newline missing (missing-final-newline)
 core/main.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 core/main.py:1:0: C0115: Missing class docstring (missing-class-docstring)
 core/main.py:1:0: C0103: Class name "main" doesn't conform to PascalCase naming style (invalid-name)
 core/main.py:1:0: R0903: Too few public methods (0/2) (too-few-public-methods)
-************* Module board
+************* Module core.board
 core/board.py:15:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:17:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:18:47: C0303: Trailing whitespace (trailing-whitespace)
@@ -44,10 +45,9 @@ core/board.py:124:27: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:126:0: C0301: Line too long (126/100) (line-too-long)
 core/board.py:130:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-core/board.py:1:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
-core/board.py:2:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
 core/board.py:2:0: W0401: Wildcard import validaciones (wildcard-import)
-************* Module exceptions
+core/board.py:2:0: W0614: Unused import(s) Validaciones, BackgammonError, FueraDeRangoError, CeldaInvalidaError, ValidacionError, CeldaBloqueadaError, FichasCapturadasError, SinFichasCapturadas, ReingresoInvalidoError, SalidaInvalidaError and SaltosError from wildcard import of validaciones (unused-wildcard-import)
+************* Module core.exceptions
 core/exceptions.py:42:0: C0305: Trailing newlines (trailing-newlines)
 core/exceptions.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 core/exceptions.py:3:4: W0107: Unnecessary pass statement (unnecessary-pass)
@@ -60,15 +60,15 @@ core/exceptions.py:27:4: W0107: Unnecessary pass statement (unnecessary-pass)
 core/exceptions.py:31:4: W0107: Unnecessary pass statement (unnecessary-pass)
 core/exceptions.py:35:4: W0107: Unnecessary pass statement (unnecessary-pass)
 core/exceptions.py:39:4: W0107: Unnecessary pass statement (unnecessary-pass)
-************* Module player
+************* Module core.player
 core/player.py:9:0: C0303: Trailing whitespace (trailing-whitespace)
 core/player.py:13:0: C0303: Trailing whitespace (trailing-whitespace)
 core/player.py:21:0: C0303: Trailing whitespace (trailing-whitespace)
 core/player.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module ficha
+************* Module core.ficha
 core/ficha.py:37:0: C0303: Trailing whitespace (trailing-whitespace)
 core/ficha.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-************* Module validaciones
+************* Module core.validaciones
 core/validaciones.py:8:17: C0303: Trailing whitespace (trailing-whitespace)
 core/validaciones.py:17:0: C0303: Trailing whitespace (trailing-whitespace)
 core/validaciones.py:21:0: C0303: Trailing whitespace (trailing-whitespace)
@@ -100,32 +100,19 @@ core/validaciones.py:150:0: C0303: Trailing whitespace (trailing-whitespace)
 core/validaciones.py:159:0: C0303: Trailing whitespace (trailing-whitespace)
 core/validaciones.py:160:0: C0304: Final newline missing (missing-final-newline)
 core/validaciones.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-core/validaciones.py:1:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
 core/validaciones.py:1:0: W0401: Wildcard import exceptions (wildcard-import)
-core/validaciones.py:15:22: E0602: Undefined variable 'FichasCapturadasError' (undefined-variable)
-core/validaciones.py:20:18: E0602: Undefined variable 'FichasCapturadasError' (undefined-variable)
-core/validaciones.py:23:18: E0602: Undefined variable 'FueraDeRangoError' (undefined-variable)
-core/validaciones.py:26:18: E0602: Undefined variable 'CeldaInvalidaError' (undefined-variable)
-core/validaciones.py:29:18: E0602: Undefined variable 'CeldaBloqueadaError' (undefined-variable)
-core/validaciones.py:40:18: E0602: Undefined variable 'CeldaBloqueadaError' (undefined-variable)
-core/validaciones.py:55:18: E0602: Undefined variable 'SinFichasCapturadas' (undefined-variable)
-core/validaciones.py:65:18: E0602: Undefined variable 'ReingresoInvalidoError' (undefined-variable)
-core/validaciones.py:72:22: E0602: Undefined variable 'CeldaBloqueadaError' (undefined-variable)
-core/validaciones.py:84:18: E0602: Undefined variable 'FichasCapturadasError' (undefined-variable)
-core/validaciones.py:96:30: E0602: Undefined variable 'SalidaInvalidaError' (undefined-variable)
 core/validaciones.py:100:11: R1714: Consider merging these comparisons with 'in' by using 'destino in (24, -1)'. Use a set instead if elements are hashable. (consider-using-in)
-core/validaciones.py:107:26: E0602: Undefined variable 'SalidaInvalidaError' (undefined-variable)
-core/validaciones.py:111:26: E0602: Undefined variable 'SalidaInvalidaError' (undefined-variable)
 core/validaciones.py:80:4: R0912: Too many branches (14/12) (too-many-branches)
 core/validaciones.py:147:23: W0718: Catching too general exception Exception (broad-exception-caught)
 core/validaciones.py:157:23: W0718: Catching too general exception Exception (broad-exception-caught)
-************* Module dice
+core/validaciones.py:1:0: W0614: Unused import(s) BackgammonError, ValidacionError and SaltosError from wildcard import of exceptions (unused-wildcard-import)
+************* Module core.dice
 core/dice.py:18:13: C0303: Trailing whitespace (trailing-whitespace)
 core/dice.py:23:40: C0303: Trailing whitespace (trailing-whitespace)
 core/dice.py:24:0: C0303: Trailing whitespace (trailing-whitespace)
 core/dice.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 core/dice.py:15:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
-************* Module backgammon
+************* Module core.backgammon
 core/backgammon.py:41:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:50:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:55:0: C0303: Trailing whitespace (trailing-whitespace)
@@ -143,18 +130,9 @@ core/backgammon.py:100:40: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:103:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:130:0: C0304: Final newline missing (missing-final-newline)
 core/backgammon.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-core/backgammon.py:1:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
-core/backgammon.py:2:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
-core/backgammon.py:3:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
-core/backgammon.py:4:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
 core/backgammon.py:4:0: W0401: Wildcard import validaciones (wildcard-import)
-core/backgammon.py:5:0: E0402: Attempted relative import beyond top-level package (relative-beyond-top-level)
 core/backgammon.py:5:0: W0401: Wildcard import exceptions (wildcard-import)
-core/backgammon.py:76:18: E0602: Undefined variable 'SaltosError' (undefined-variable)
-core/backgammon.py:79:18: E0602: Undefined variable 'SaltosError' (undefined-variable)
-core/backgammon.py:82:15: E0602: Undefined variable 'Validaciones' (undefined-variable)
-core/backgammon.py:98:11: E0602: Undefined variable 'Validaciones' (undefined-variable)
-core/backgammon.py:115:15: E0602: Undefined variable 'Validaciones' (undefined-variable)
+core/backgammon.py:4:0: W0614: Unused import(s) BackgammonError, FueraDeRangoError, CeldaInvalidaError, ValidacionError, CeldaBloqueadaError, FichasCapturadasError, SinFichasCapturadas, ReingresoInvalidoError and SalidaInvalidaError from wildcard import of validaciones (unused-wildcard-import)
 ************* Module cli.cli
 cli/cli.py:8:0: C0303: Trailing whitespace (trailing-whitespace)
 cli/cli.py:9:0: C0303: Trailing whitespace (trailing-whitespace)
@@ -192,7 +170,7 @@ cli/cli.py:68:12: R1705: Unnecessary "else" after "return", remove the "else" an
 cli/cli.py:2:0: W0614: Unused import(s) FueraDeRangoError, CeldaInvalidaError, ValidacionError, CeldaBloqueadaError, FichasCapturadasError, SinFichasCapturadas, ReingresoInvalidoError, SalidaInvalidaError and SaltosError from wildcard import of core.exceptions (unused-wildcard-import)
 
 -----------------------------------
-Your code has been rated at 2.42/10
+Your code has been rated at 5.98/10
 
 
 ```
