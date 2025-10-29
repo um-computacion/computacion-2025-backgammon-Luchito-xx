@@ -34,16 +34,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt      
         
-      - name: Run tests and generate coverage report
+      - name: Run tests with unittest and generate coverage
         run: |
-          coverage run -m unittest discover
-          coverage xml -o cobertura.xml
-          coverage report -m > coverage_report.txt      
+          coverage run -m unittest discover -s tests -p "test_*.py"
+          coverage xml -o coverage.xml
+          coverage report -m > coverage_report.txt
+          cat coverage_report.txt    
         
-      - name: Run Pylint and generate report
+      - name: Run Pylint on core and cli modules
         run: |
-          pylint --rcfile=.pylintrc main.py test.py > pylint_report.txt || true      
-      
+          pylint core/ cli/ --rcfile=.pylintrc > pylint_report.txt || true
+          cat pylint_report.txt
+          
       - name: Generate reports file
         run: |
           cat << 'EOF' > generate_reports.py

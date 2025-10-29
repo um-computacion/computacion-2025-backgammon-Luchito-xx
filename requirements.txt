@@ -1,13 +1,11 @@
-pytest
-coverage
-requests
-pandas
-numpy
-matplotlib
-seaborn
-scipy
-scikit-learn
-statsmodels
-lxml
-beautifulsoup4
-pylint  
+# Testing 
+coverage>=7.2.0
+
+# Code Quality
+pylint>=2.17.0
+
+# Game Development
+pygame>=2.5.0
+
+# Web Framework
+redis>=4.5.0
