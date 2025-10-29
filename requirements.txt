@@ -1,0 +1,11 @@
+# Testing 
+coverage>=7.2.0
+
+# Code Quality
+pylint>=2.17.0
+
+# Game Development
+pygame>=2.5.0
+
+# Web Framework
+redis>=4.5.0

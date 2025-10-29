@@ -1,24 +1,21 @@
-class player:
-    def __init__(self, name, direccion, fichas=99):
-        self.__name__ = name
-        self.__direccion__ = direccion
-        self.__fichas__ = fichas
-        self.__turno__ = False
-        self.__ganador__ = False
+class Player:
+    """Clase que representa a un jugador en el juego.
+    Atributos:
+        __name : str
+            Nombre del jugador
+    """
+    def __init__(self, name):
+        self.__name = name
     
     def get_name(self):
-        return self.__name__
+        """Obtener el nombre del jugador"""
+        return self.__name
     
-    def get_direccion(self):    
-        return self.__direccion__
-    
-    def get_fichas(self):
-        return self.__fichas__
-    
+    def set_name(self, name):
+        """Establecer el nombre del jugador"""
+        self.__name = name
+
     def __repr__(self):
-        return f"Player: {self.__name__}, Direccion: {self.__direccion__}, Fichas: {self.__fichas__}, Turno: {self.__turno__}, Ganador: {self.__ganador__}"
+        """Representacion del jugador"""
+        return f"Player: {self.__name}"
     
-    
-if __name__ == "__main__":
-    p = player("Lucho", -1)
-    print(p)
