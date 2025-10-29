@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.Python
+
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Testing & Coverage
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+coverage_report.txt
+pylint_report.txt
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+generate_reports.py
+dump.rdb
+*.log
