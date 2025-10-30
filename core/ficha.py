@@ -71,6 +71,3 @@ class Ficha:
         """
         estado = "capturada" if self.__capturada__ else "libre"
         return f"<Ficha jugador={self.__jugador__} {estado}>"
-    
-
-        

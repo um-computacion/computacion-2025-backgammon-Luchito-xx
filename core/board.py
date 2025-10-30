@@ -6,7 +6,6 @@ de las fichas y las operaciones de movimiento, captura y reingreso.
 """
 
 from .ficha import Ficha
-from .validaciones import *
 
 class Board:
     """
