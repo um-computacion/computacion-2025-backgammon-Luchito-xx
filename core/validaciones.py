@@ -5,7 +5,11 @@ Verifica la validez de movimientos, reingresos, salidas del tablero y
 condiciones de victoria
 """
 
-from .exceptions import *
+from .exceptions import (
+    FichasCapturadasError, FueraDeRangoError, CeldaBloqueadaError,
+    CeldaInvalidaError, SinFichasCapturadas, ReingresoInvalidoError,
+    SalidaInvalidaError
+)
 
 class Validaciones:
     """

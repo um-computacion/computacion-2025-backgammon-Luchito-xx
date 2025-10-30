@@ -9,8 +9,8 @@ flujo de turnos, movimientos y condiciones de victoria.
 from .board import Board
 from .player import Player
 from .dice import Dice
-from .validaciones import *
-from .exceptions import *
+from .validaciones import Validaciones
+from .exceptions import SaltosError
 
 
 class Backgammon:
