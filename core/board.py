@@ -1,3 +1,13 @@
+"""
+Módulo Board - Gestión del tablero de Backgammon.
+
+Contiene la clase Board que maneja el estado del tablero, las posiciones
+de las fichas y las operaciones de movimiento, captura y reingreso.
+
+Gestiona las 24 posiciones del tablero y las fichas capturadas.
+Ejecuta movimientos, capturas y reingresos según las reglas del juego.
+"""
+
 from .ficha import Ficha
 from .validaciones import *
 
@@ -6,21 +16,29 @@ class Board:
     class board -> Representa el tablero del juego de backgammon
     
     Atributos
-    __celdas__ : list
-        Lista de listas que representan las celdas del tablero y las fichas en cada cel
-    
-    __capturas__ : list
-        Lista de fichas capturadas (en la barra)
+        __celdas__ (list[list[Ficha]]): 24 listas que representan las
+            posiciones del tablero. Cada posición contiene fichas apiladas.
+        __capturas__ (list[Ficha]): Lista de fichas capturadas en la barra.
     """
     
     def __init__(self):
+        """
+        Inicializa un tablero vacío de Backgammon.
+
+        Crea 24 posiciones vacías y una lista vacía para fichas capturadas.
+        """
       
         self.__celdas__ = [[] for _ in range(24)]  
         self.__capturas__ = []  
 
 
     def inicio(self):
-        """    Inicializa el tablero con la configuración inicial de fichas"""
+        """    
+        Inicializa el tablero con la configuración estándar de Backgammon.
+
+        Coloca las 15 fichas de cada jugador en sus posiciones iniciales
+        según las reglas oficiales y limpia las fichas capturadas.
+        """
         self.__celdas__ = [[] for _ in range(24)]
         self.__capturas__ = []
 
@@ -40,29 +58,55 @@ class Board:
         return f"Board: {self.__celdas__}"
     
     def get_celdas(self):
-        """Devuelve las celdas del tablero"""
+        """
+            Obtiene todas las celdas del tablero.
+        Returns:
+            list[list[Ficha]]: Lista de 24 posiciones, cada una con sus fichas.
+        """
         return self.__celdas__
 
     def get_capturas(self):
-        """Devuelve las fichas capturadas (en la barra)"""
+        """
+            Obtiene la lista de fichas capturadas en la barra.
+        Returns:
+            list[Ficha]: Lista de fichas capturadas que deben reingresar.
+        """
         return self.__capturas__
     
     def tiene_capturadas(self, jugador:str) -> bool:
-        """Verifica si un jugador tiene fichas capturadas"""
+        """        
+            Verifica si un jugador tiene fichas capturadas en la barra.
+        Args:
+            jugador (str): Identificador del jugador ('X' o 'O').
+
+        Returns:
+            bool: True si el jugador tiene al menos una ficha capturada.
+        """
         for ficha in self.__capturas__:
             if ficha.get_jugador() == jugador:
                 return True
         return False
     
     def repr_celda(self, celda:list):
-        """Representación corta de una celda del tablero"""
+        """
+            Genera representación corta de una celda del tablero.
+        Args:
+            celda (list[Ficha]): Lista de fichas en una posición.
+
+        Returns:
+            str: Representación compacta (ej: "XXX" para 3 fichas X).
+        """
         if not celda:
             return "--"
         jugador = celda[0].get_jugador()
         return f"{jugador * len(celda)}"
     
     def get_board(self):
-        """Representación visual del tablero"""
+        """        
+            Genera representación visual completa del tablero.
+        Returns:
+            str: Representación visual del tablero en formato texto.
+        """
         def c(i):
             cel = self.__celdas__[i]
             return "--" if not cel else f"{cel[0].get_jugador()}{len(cel)}"
@@ -88,7 +132,20 @@ class Board:
         return "\n".join([nums_sup, fichas_sup, barra, fichas_inf, nums_inf])
 
     def mover(self, celda, salto, jugador):
-        """Mueve una ficha en el tablero (reingreso, salida o movimiento normal)"""
+        """
+        Mueve una ficha en el tablero según las reglas de Backgammon.
+
+        Ejecuta movimientos normales, reingresos desde la barra o salidas
+        del tablero. Maneja capturas de fichas enemigas automáticamente.
+
+        Args:
+            celda (int): Posición origen (0-23) o -1 para reingreso.
+            salto (int): Cantidad de posiciones a avanzar según el dado.
+            jugador (str): Identificador del jugador que mueve ('X' o 'O').
+
+        Returns:
+            None
+        """
         
         # Reingreso de barra
         if celda == -1:

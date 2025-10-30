@@ -1,21 +1,41 @@
+"""
+Módulo Player - Representación de jugadores.
+
+Contiene la clase Player que representa a cada jugador en el juego
+de Backgammon con su identificador único.
+
+Un jugador se identifica por su nombre y participa en el juego
+realizando movimientos con sus fichas.
+"""
+
 class Player:
-    """Clase que representa a un jugador en el juego.
+    """
+    class Player: Representa a un jugador en el juego de Backgammon.
+
     Atributos:
-        __name____ : str
-            Nombre del jugador
+        __name__ (str): Identificador del jugador.
+    
     """
     def __init__(self, name):
+        """        
+            Inicializa un nuevo jugador con su identificador.
+        Args:
+            name (str): Identificador del jugador ('X' o 'O').
+        """
         self.__name__ = name
     
     def get_name(self):
-        """Obtener el nombre del jugador"""
+        """
+            Obtiene el identificador del jugador.
+        Returns:
+            str: Nombre/identificador del jugador.
+        """
         return self.__name__
     
     def set_name(self, name):
-        """Establecer el nombre del jugador"""
+        """
+            Establece un nuevo identificador para el jugador.
+        Args:
+            name (str): Nuevo identificador del jugador.
+        """
         self.__name__ = name
-
-    def __repr__(self):
-        """Representacion del jugador"""
-        return f"Player: {self.__name__}"
-    

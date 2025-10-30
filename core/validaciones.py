@@ -1,13 +1,35 @@
+"""
+Módulo Validaciones - Validación de reglas del juego.
+
+Verifica la validez de movimientos, reingresos, salidas del tablero y
+condiciones de victoria
+"""
+
 from .exceptions import *
 
 class Validaciones:
     """
-    Clase de validaciones para el juego de backgammon.
-    Proporciona metodos estaticos para validar movimientos y condicion de victoria"""
+    class Validaciones: Valida las reglas del juego de Backgammon con uso 
+    de metodos estaticos
+    """
 
     @staticmethod 
     def movimiento_valido(celdas:list, capturas, celda:int, salto:int, jugador:str):
-        """Valida si un movimiento es valido """
+        """
+            Valida si un movimiento cumple las reglas de Backgammon.
+        - posición válida - fichas propias - destino disponible 
+        - obligación de reingresar capturas - posibilidad de salir del tablero
+
+        Args:
+            celdas (list[list[Ficha]]): Estado actual del tablero (24 pos).
+            capturas (list[Ficha]): Lista de fichas capturadas en la barra.
+            celda (int): Posición origen (0-23) o -1 para reingreso.
+            salto (int): Cantidad de posiciones del dado (1-6).
+            jugador (str): Identificador del jugador ('X' o 'O').
+
+        Returns:
+            bool: True si el movimiento es válido según las reglas.
+        """
 
         # Reingreso antes de usar otras fichas
         if Validaciones.tiene_capturas(capturas, jugador):
@@ -43,12 +65,30 @@ class Validaciones:
 
     @staticmethod
     def tiene_capturas(capturas: list, jugador:str):
-        """verifica si tiene capturas"""
+        """
+            Verifica si un jugador tiene fichas capturadas en la barra.
+        Args:
+            capturas (list[Ficha]): Lista de fichas en la barra.
+            jugador (str): Identificador del jugador ('X' o 'O').
+
+        Returns:
+            bool: True si el jugador tiene al menos una ficha capturada.
+        """
         return any(f.get_jugador() == jugador for f in capturas)
 
     @staticmethod
     def validar_reingreso(capturas: list, salto: int, jugador: str, celdas: list) -> bool:
-        """Valida el reingreso de una ficha capturada"""
+        """
+            Valida el reingreso de una ficha capturada desde la barra.
+        Args:
+            capturas (list[Ficha]): Lista de fichas en la barra.
+            salto (int): Valor del dado para el reingreso (1-6).
+            jugador (str): Identificador del jugador ('X' o 'O').
+            celdas (list[list[Ficha]]): Estado actual del tablero.
+
+        Returns:
+            bool: True si el reingreso es válido.
+        """
         
         # Verificar que tiene fichas capturadas
         if not Validaciones.tiene_capturas(capturas, jugador):
@@ -78,7 +118,18 @@ class Validaciones:
     
     @staticmethod
     def validar_salida(celdas: list, capturas: list, celda: int, salto: int, jugador: str):
-        """Valida si puede sacar fichas del tablero"""
+        """        
+            Valida si puede sacar fichas del tablero (sin capturas y en casa)
+        Args:
+            celdas (list[list[Ficha]]): Estado actual del tablero.
+            capturas (list[Ficha]): Lista de fichas capturadas.
+            celda (int): Posición de la ficha a sacar (0-23).
+            salto (int): Valor del dado (1-6).
+            jugador (str): Identificador del jugador ('X' o 'O').
+
+        Returns:
+            bool: True si puede sacar la ficha.
+        """
         # No puede tener capturas
         if Validaciones.tiene_capturas(capturas, jugador):
             raise FichasCapturadasError("No puedes sacar fichas teniendo capturas")
@@ -114,7 +165,16 @@ class Validaciones:
         
     @staticmethod
     def validar_victoria(celdas: list, capturas:list, jugador: str):
-        """Valida si un jugador ha ganado la partida"""
+        """
+            Valida si un jugador ha ganado la partida (sin fichas en capturas o board).
+        Args:
+            celdas (list[list[Ficha]]): Estado actual del tablero.
+            capturas (list[Ficha]): Lista de fichas capturadas.
+            jugador (str): Identificador del jugador ('X' o 'O').
+
+        Returns:
+            bool: True si el jugador ha ganado (0 fichas en total).
+        """
         # fichas a contar
         fichas = 0
 
@@ -132,7 +192,17 @@ class Validaciones:
 
     @staticmethod
     def puede_mover(celdas: list, capturas: list, saltos: list, jugador: str) -> bool:
-        """Devuelve True si el jugador tiene al menos un movimiento válido."""
+        """
+            Verifica si el jugador tiene al menos un movimiento válido.
+        Args:
+            celdas (list[list[Ficha]]): Estado actual del tablero.
+            capturas (list[Ficha]): Lista de fichas capturadas.
+            saltos (list[int]): Valores de dados disponibles.
+            jugador (str): Identificador del jugador ('X' o 'O').
+
+        Returns:
+            bool: True si existe al menos un movimiento válido.
+        """
         
         # Si no hay dados, no puede mover
         if not saltos:
