@@ -3,9 +3,6 @@ Módulo Ficha - Representación de fichas del juego.
 
 Define la clase Ficha que representa cada pieza en el tablero de Backgammon,
 incluyendo su propietario y estado de captura.
-
-Una ficha pertenece a un jugador específico y puede estar en el tablero
-o capturada en la barra. 
 """
 
 class Ficha:

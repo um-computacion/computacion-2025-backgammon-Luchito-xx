@@ -27,7 +27,6 @@ class Board:
 
         Crea 24 posiciones vacías y una lista vacía para fichas capturadas.
         """
-      
         self.__celdas__ = [[] for _ in range(24)]  
         self.__capturas__ = []  
 

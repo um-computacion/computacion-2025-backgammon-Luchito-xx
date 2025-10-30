@@ -3,9 +3,6 @@ Módulo Player - Representación de jugadores.
 
 Contiene la clase Player que representa a cada jugador en el juego
 de Backgammon con su identificador único.
-
-Un jugador se identifica por su nombre y participa en el juego
-realizando movimientos con sus fichas.
 """
 
 class Player:
