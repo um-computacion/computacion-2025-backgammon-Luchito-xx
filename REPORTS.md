@@ -34,9 +34,9 @@ core/main.py:1:0: R0903: Too few public methods (0/2) (too-few-public-methods)
 ************* Module core.board
 core/board.py:15:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:17:0: C0303: Trailing whitespace (trailing-whitespace)
-core/board.py:18:47: C0303: Trailing whitespace (trailing-whitespace)
-core/board.py:19:28: C0303: Trailing whitespace (trailing-whitespace)
-core/board.py:32:59: C0303: Trailing whitespace (trailing-whitespace)
+core/board.py:18:49: C0303: Trailing whitespace (trailing-whitespace)
+core/board.py:19:30: C0303: Trailing whitespace (trailing-whitespace)
+core/board.py:32:61: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:37:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:41:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:49:0: C0303: Trailing whitespace (trailing-whitespace)
@@ -46,12 +46,12 @@ core/board.py:73:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:92:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:96:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:104:0: C0303: Trailing whitespace (trailing-whitespace)
-core/board.py:106:0: C0301: Line too long (130/100) (line-too-long)
+core/board.py:106:0: C0301: Line too long (136/100) (line-too-long)
 core/board.py:110:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:114:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:123:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:124:27: C0303: Trailing whitespace (trailing-whitespace)
-core/board.py:126:0: C0301: Line too long (126/100) (line-too-long)
+core/board.py:126:0: C0301: Line too long (132/100) (line-too-long)
 core/board.py:130:0: C0303: Trailing whitespace (trailing-whitespace)
 core/board.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 core/board.py:2:0: W0401: Wildcard import validaciones (wildcard-import)
@@ -119,6 +119,7 @@ core/validaciones.py:1:0: W0614: Unused import(s) BackgammonError, ValidacionErr
 core/dice.py:18:13: C0303: Trailing whitespace (trailing-whitespace)
 core/dice.py:23:40: C0303: Trailing whitespace (trailing-whitespace)
 core/dice.py:24:0: C0303: Trailing whitespace (trailing-whitespace)
+core/dice.py:27:0: C0304: Final newline missing (missing-final-newline)
 core/dice.py:1:0: C0114: Missing module docstring (missing-module-docstring)
 core/dice.py:15:8: R1705: Unnecessary "else" after "return", remove the "else" and de-indent the code inside it (no-else-return)
 ************* Module core.backgammon
@@ -134,8 +135,8 @@ core/backgammon.py:80:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:90:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:96:0: C0303: Trailing whitespace (trailing-whitespace)
-core/backgammon.py:99:38: C0303: Trailing whitespace (trailing-whitespace)
-core/backgammon.py:100:40: C0303: Trailing whitespace (trailing-whitespace)
+core/backgammon.py:99:40: C0303: Trailing whitespace (trailing-whitespace)
+core/backgammon.py:100:42: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:103:0: C0303: Trailing whitespace (trailing-whitespace)
 core/backgammon.py:130:0: C0304: Final newline missing (missing-final-newline)
 core/backgammon.py:1:0: C0114: Missing module docstring (missing-module-docstring)
@@ -179,7 +180,7 @@ cli/cli.py:68:12: R1705: Unnecessary "else" after "return", remove the "else" an
 cli/cli.py:2:0: W0614: Unused import(s) FueraDeRangoError, CeldaInvalidaError, ValidacionError, CeldaBloqueadaError, FichasCapturadasError, SinFichasCapturadas, ReingresoInvalidoError, SalidaInvalidaError and SaltosError from wildcard import of core.exceptions (unused-wildcard-import)
 
 -----------------------------------
-Your code has been rated at 5.98/10
+Your code has been rated at 5.96/10
 
 
 ```
