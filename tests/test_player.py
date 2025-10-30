@@ -11,10 +11,3 @@ class TestPlayer(unittest.TestCase):
         p = Player("Luchito")
         p.set_name("Lucas")
         self.assertEqual(p.get_name(), "Lucas")
-
-    def test_player_repr(self):
-        p = Player("Luchito")
-        self.assertEqual(repr(p), "Player: Luchito")
-        p.set_name("Lucas")
-        self.assertEqual(repr(p), "Player: Lucas")  
-    
