@@ -66,6 +66,14 @@ class Ficha:
         """
         self.__capturada = bool(capturada)
 
+    def __repr__(self) -> str:
+        """
+            Representación técnica de la ficha para debugging.
+        Returns:
+            str: Cadena en formato '<Ficha jugador=X estado>'.
+        """
+        estado = "capturada" if self.__capturada__ else "libre"
+        return f"<Ficha jugador={self.__jugador__} {estado}>"
     
 
         
