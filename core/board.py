@@ -6,7 +6,7 @@ de las fichas y las operaciones de movimiento, captura y reingreso.
 """
 
 from .ficha import Ficha
-
+from .validaciones import Validaciones
 class Board:
     """
     class board -> Representa el tablero del juego de backgammon
