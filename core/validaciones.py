@@ -17,9 +17,6 @@ class Validaciones:
     def movimiento_valido(celdas:list, capturas, celda:int, salto:int, jugador:str):
         """
             Valida si un movimiento cumple las reglas de Backgammon.
-        - posición válida - fichas propias - destino disponible 
-        - obligación de reingresar capturas - posibilidad de salir del tablero
-
         Args:
             celdas (list[list[Ficha]]): Estado actual del tablero (24 pos).
             capturas (list[Ficha]): Lista de fichas capturadas en la barra.

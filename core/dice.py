@@ -3,10 +3,6 @@ Módulo Dice - Gestión de dados del juego.
 
 Contiene la clase Dice que maneja el lanzamiento de dados para
 determinar los movimientos disponibles en cada turno de Backgammon.
-
-Los dados determinan cuántas posiciones puede mover cada jugador.
-En caso de obtener valores dobles, se permiten 4 movimientos del
-mismo valor.
 """
 
 import random
@@ -14,7 +10,6 @@ import random
 class Dice:
     """
     class Dice: Representa un par de dados en el juego.
-
     Atributos:
         __valor__ (list[int]): Lista con los valores actuales de los dados.
     """

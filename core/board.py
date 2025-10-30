@@ -3,9 +3,6 @@ Módulo Board - Gestión del tablero de Backgammon.
 
 Contiene la clase Board que maneja el estado del tablero, las posiciones
 de las fichas y las operaciones de movimiento, captura y reingreso.
-
-Gestiona las 24 posiciones del tablero y las fichas capturadas.
-Ejecuta movimientos, capturas y reingresos según las reglas del juego.
 """
 
 from .ficha import Ficha

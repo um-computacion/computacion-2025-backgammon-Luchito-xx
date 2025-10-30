@@ -1,3 +1,8 @@
+"""
+Módulo Exceptions - Excepciones personalizadas del juego.
+
+"""
+
 class BackgammonError(Exception):
     """Base para todas las excepciones del juego Backgammon."""
     pass
