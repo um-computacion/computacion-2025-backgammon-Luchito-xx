@@ -29,7 +29,7 @@ class Ficha:
         """
         
         self.__jugador__ = jugador
-        self.__capturada = False
+        self.__capturada__ = False
 
     def get_jugador(self) -> str:
         """        
@@ -55,7 +55,7 @@ class Ficha:
         Returns:
             bool: True si está en la barra, False si está en el tablero.
         """
-        return self.__capturada
+        return self.__capturada__
 
     def set_capturada(self, capturada: bool = True) -> None:
         """       
@@ -64,7 +64,7 @@ class Ficha:
             capturada (bool, optional): True para marcar como capturada,
                 False para liberar. Por defecto True.
         """
-        self.__capturada = bool(capturada)
+        self.__capturada__ = bool(capturada)
 
     def __repr__(self) -> str:
         """
