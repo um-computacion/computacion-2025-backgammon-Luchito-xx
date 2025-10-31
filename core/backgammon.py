@@ -53,29 +53,25 @@ class Backgammon:
         self.__saltos__ = []
         self.__ganador__ = None
 
-        print("Seleccion de jugador inicial...")
-        self.turno_inicial()
+        return self.turno_inicial()
 
     def turno_inicial(self):
-        """
-        Determina el primer jugador que inicia el juego.
-        Lanza los dados hasta obtener valores diferentes. El jugador
-        con el valor más alto juega primero.
-        Resultado: self.__turno__ -> ganador (0 ó 1)
-        """
+        """Determinar el primer jugador que inicia el juego"""
         while True:
             valores = self.__dice__.roll()
-            print(f"Dados lanzados: {valores[0]} y {valores[1]}")
+
             if valores[0] != valores[1]:
-                break
-            print("Empate, lanzo denuevo")
 
-        if valores[0] > valores[1]:
-            self.__turno__ = 0
-        else:
-            self.__turno__ = 1
+                if valores[0] > valores[1]:
+                    self.__turno__ = 0
+                else:
+                    self.__turno__ = 1
 
-        print(f"El jugador {self.get_jugador().get_name()} juego primero")
+                return {
+                    "dados_x": valores[0],
+                    "dados_o": valores[1],
+                    "ganador": self.get_jugador().get_name()
+                }
 
     def tirar_dado(self):
         """
