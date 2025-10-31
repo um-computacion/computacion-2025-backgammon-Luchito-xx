@@ -1,6 +1,8 @@
 """
 Módulo Exceptions - Excepciones personalizadas del juego.
 
+Define todas las excepciones especificas del juego Backgammon
+para manejo de errores de validacoin y reglas del juego
 """
 
 class BackgammonError(Exception):
@@ -32,3 +34,4 @@ class SalidaInvalidaError(BackgammonError):
 
 class SaltosError(BackgammonError):
     """Errores relacionados con los saltos/dados (ej: no tirar antes de mover)."""
+    
