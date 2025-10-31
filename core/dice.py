@@ -44,3 +44,4 @@ class Dice:
             list[int]: Lista con los valores de los dados desde el último roll().
         """
         return self.__valor__
+    
