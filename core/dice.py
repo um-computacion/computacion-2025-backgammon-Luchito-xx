@@ -21,7 +21,7 @@ class Dice:
 
     def roll(self):
         """        
-            Lanza los dados y genera valores aleatorios
+        Lanza los dados y genera valores aleatorios
         Returns:
             list[int]: Lista con 2 valores o 4 valores si son iguales. 
         """
@@ -29,19 +29,17 @@ class Dice:
         if self.__valor__[0] == self.__valor__[1]:
             self.__valor__ = [self.__valor__[0]] * 4
             return self.__valor__
-        else: 
-            return self.__valor__
 
     def __str__(self):
         """        
-            Representación legible de los dados.
+        Representación legible de los dados.
         Returns:
             str: Cadena describiendo los valores actuales de los dados."""
         return f"Dado: {self.__valor__}" 
            
     def get_valor(self):
         """        
-            Obtiene los valores actuales de los dados.
+        Obtiene los valores actuales de los dados.
         Returns:
             list[int]: Lista con los valores de los dados desde el último roll().
         """
