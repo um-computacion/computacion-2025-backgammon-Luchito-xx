@@ -152,14 +152,14 @@ class PygameUI:
         if evento.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
-            # ✅ LÓGICA MEJORADA: Verificar click en botón "Tirar Dados"
+            # Verificar click en botón "Tirar Dados"
             if not self.__game__.get_saltos():
                 btn_dados = pygame.Rect(850, 250, 120, 40)
                 if btn_dados.collidepoint(mouse_pos):
                     self.__game__.tirar_dado()
                     saltos = self.__game__.get_saltos()
                     
-                    # ✅ Actualizar dados visuales
+                    # Actualizar dados visuales
                     self.__gestor_dados__.actualizar_dados(saltos, 860, 310)
                     
                     self.__mensaje__ = f"Dados: {saltos}"
