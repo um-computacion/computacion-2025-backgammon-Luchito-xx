@@ -98,6 +98,35 @@ class Backgammon:
         """
         return self.__players__[self.__turno__]
 
+    def get_board(self):
+        """
+        Obtiene el tablero actual del juego.
+        Returns:
+            Board: Instancia del tablero de juego.
+        """
+        return self.__board__
+
+    def get_celdas(self):
+        """
+        Obtiene las celdas actuales del tablero de Backgammon.
+
+        Returns:
+            list[list[Ficha]]: Lista de 24 posiciones del tablero,
+            donde cada posición contiene las fichas que se encuentran en ella.
+        """
+        return self.__board__.get_celdas()
+
+
+    def get_capturas(self):
+        """
+        Obtiene las fichas capturadas actualmente en el tablero.
+
+        Returns:
+            dict[str, list[Ficha]]: Diccionario con las fichas capturadas
+            por cada jugador, usando identificador como clave.
+        """
+        return self.__board__.get_capturas()
+
     def mover(self, celda, salto):
         """
         Realiza un movimiento en el juego de Backgammon.
