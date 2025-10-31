@@ -5,7 +5,7 @@
 Name                         Stmts   Miss  Cover   Missing
 ----------------------------------------------------------
 core/__init__.py                 0      0   100%
-core/backgammon.py              54      8    85%   116, 126, 139, 143, 149-150, 158, 178
+core/backgammon.py              60     11    82%   107, 117, 128, 145, 155, 168, 172, 178-179, 187, 207
 core/board.py                   68      8    88%   53, 80-83, 153-155
 core/dice.py                    13      0   100%
 core/exceptions.py              10      0   100%
@@ -19,7 +19,7 @@ tests/test_ficha.py             26      0   100%
 tests/test_player.py            10      0   100%
 tests/test_validaciones.py      84      0   100%
 ----------------------------------------------------------
-TOTAL                          608     48    92%
+TOTAL                          614     51    92%
 
 ```          
 
