@@ -7,10 +7,8 @@ interacción visual con el tablero mediante mouse y teclado.
 
 import sys
 import pygame
-
 from core.backgammon import Backgammon
 from core.exceptions import BackgammonError
-from pygame_ui.dados_ui import GestorDados  # ✅ IMPORTACIÓN AGREGADA
 
 
 class PygameUI:
@@ -26,7 +24,6 @@ class PygameUI:
         __colors__ (dict): Diccionario de colores para el UI.
         __fonts__ (dict): Diccionario de fuentes.
         __celda_seleccionada__ (int|None): Celda actualmente seleccionada.
-        __gestor_dados__ (GestorDados): Gestor de dados visuales.
         __estado__ (str): Estado actual de la UI ('menu', 'jugando', 'victoria').
     """
     
@@ -48,7 +45,6 @@ class PygameUI:
         
         self.__clock__ = pygame.time.Clock()
         self.__game__ = Backgammon()
-        self.__gestor_dados__ = GestorDados()  # ✅ INICIALIZACIÓN AGREGADA
         
         # Configuración de colores
         self.__colors__ = {
@@ -60,7 +56,6 @@ class PygameUI:
             'ficha_o': (0, 0, 0),  # Negro
             'outline': (0, 0, 0),  # Negro
             'selected': (255, 215, 0),  # Dorado
-            'valid_move': (144, 238, 144),  # Verde claro
             'button': (70, 130, 180),  # Azul acero
             'button_hover': (100, 149, 237),  # Azul más claro
             'text': (255, 255, 255),  # Blanco
@@ -152,38 +147,28 @@ class PygameUI:
         if evento.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             
-            # ✅ LÓGICA MEJORADA: Verificar click en botón "Tirar Dados"
+            # Verificar click en botón "Tirar Dados"
             if not self.__game__.get_saltos():
-                btn_dados = pygame.Rect(850, 250, 120, 40)
+                btn_dados = pygame.Rect(850, 300, 120, 40)
                 if btn_dados.collidepoint(mouse_pos):
                     self.__game__.tirar_dado()
-                    saltos = self.__game__.get_saltos()
-                    
-                    # ✅ Actualizar dados visuales
-                    self.__gestor_dados__.actualizar_dados(saltos, 860, 310)
-                    
-                    self.__mensaje__ = f"Dados: {saltos}"
+                    self.__mensaje__ = f"Dados: {self.__game__.get_saltos()}"
                     self.__mensaje_timer__ = 120
                     
-                    # ✅ Verificar si puede mover - si no, cambiar turno automáticamente
+                    # Verificar si puede mover
                     if not self.__game__.puede_mover():
                         self.__mensaje__ = "Sin movimientos válidos. Cambiando turno..."
                         self.__mensaje_timer__ = 180
                         self.__game__.cambio_turno()
-                        self.__gestor_dados__.actualizar_dados([], 860, 310)
                     return True
             
-            # ✅ NUEVO: Click en dados (para seleccionar cuál usar)
-            if self.__game__.get_saltos():
-                valor_dado = self.__gestor_dados__.manejar_click(mouse_pos)
-                if valor_dado is not None:
-                    # Si hay celda seleccionada, intentar mover
-                    if self.__celda_seleccionada__ is not None:
-                        self._ejecutar_movimiento(self.__celda_seleccionada__, valor_dado)
-                    else:
-                        self.__mensaje__ = f"Dado {valor_dado} seleccionado. Elige una ficha."
-                        self.__mensaje_timer__ = 60
-                    return True
+            # Verificar click en botón "Pasar Turno"
+            btn_pasar = pygame.Rect(850, 350, 120, 40)
+            if btn_pasar.collidepoint(mouse_pos):
+                self.__game__.cambio_turno()
+                self.__mensaje__ = "Turno pasado"
+                self.__mensaje_timer__ = 60
+                return True
             
             # Click en tablero
             celda = self._obtener_celda_click(mouse_pos)
@@ -192,11 +177,7 @@ class PygameUI:
                 
         elif evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_ESCAPE:
-                # Deseleccionar todo
-                self.__celda_seleccionada__ = None
-                self.__gestor_dados__.deseleccionar_todos()
-                self.__mensaje__ = "Selección cancelada"
-                self.__mensaje_timer__ = 60
+                self.__estado__ = 'menu'
                 
         return True
     
@@ -226,38 +207,42 @@ class PygameUI:
         
         estado = self.__game__.mostrar()
         jugador_actual = estado['turno']
-        celdas = self.__game__.get_celdas()
+        celdas = self.__game__._Backgammon__board__.get_celdas()
         
-        # Manejo de reingreso desde la barra
-        if celda == -1:
-            capturas = self.__game__.get_capturas()
-            tiene_capturas = any(f.get_jugador() == jugador_actual for f in capturas)
-            if tiene_capturas:
-                self.__celda_seleccionada__ = -1
-                self.__mensaje__ = "Selecciona dado para reingresar"
-                self.__mensaje_timer__ = 60
-            else:
-                self.__mensaje__ = "No tienes fichas capturadas"
-                self.__mensaje_timer__ = 60
-            return
-        
-        # Verificar que la celda tenga fichas del jugador actual
-        if 0 <= celda <= 23 and celdas[celda]:
-            if celdas[celda][0].get_jugador() == jugador_actual:
-                self.__celda_seleccionada__ = celda
-                self.__gestor_dados__.deseleccionar_todos()  # Reset dados
-                self.__mensaje__ = f"Celda {celda} seleccionada. Elige un dado."
-                self.__mensaje_timer__ = 60
-            else:
-                self.__mensaje__ = "¡No es tu ficha!"
-                self.__mensaje_timer__ = 60
+        # Si no hay selección previa
+        if self.__celda_seleccionada__ is None:
+            # Verificar si hay capturas y selección es barra
+            if celda == -1:
+                capturas = self.__game__._Backgammon__board__.get_capturas()
+                tiene_capturas = any(f.get_jugador() == jugador_actual for f in capturas)
+                if tiene_capturas:
+                    self.__celda_seleccionada__ = -1
+                    self.__mensaje__ = "Selecciona dado para reingresar"
+                    self.__mensaje_timer__ = 60
+                else:
+                    self.__mensaje__ = "No tienes fichas capturadas"
+                    self.__mensaje_timer__ = 60
+            # Verificar que la celda tenga fichas del jugador actual
+            elif 0 <= celda <= 23 and celdas[celda]:
+                if celdas[celda][0].get_jugador() == jugador_actual:
+                    self.__celda_seleccionada__ = celda
+                    self.__mensaje__ = f"Celda {celda} seleccionada. Elige dado."
+                    self.__mensaje_timer__ = 60
+                else:
+                    self.__mensaje__ = "¡No es tu ficha!"
+                    self.__mensaje_timer__ = 60
         else:
-            self.__mensaje__ = "Celda vacía"
+            # Ya hay una celda seleccionada, ahora seleccionar dado
+            # El "celda" clickeado ahora representa la elección de dado
+            # En una implementación real, necesitarías botones específicos para dados
+            # Por simplicidad, cancelar selección si click en otra celda
+            self.__celda_seleccionada__ = None
+            self.__mensaje__ = "Selección cancelada"
             self.__mensaje_timer__ = 60
     
     def _ejecutar_movimiento(self, origen, salto):
         """
-        ✅ MÉTODO NUEVO: Ejecuta un movimiento en el juego.
+        Ejecuta un movimiento en el juego.
         
         Args:
             origen (int): Celda origen.
@@ -269,35 +254,19 @@ class PygameUI:
             self.__mensaje_timer__ = 60
             self.__celda_seleccionada__ = None
             
-            # ✅ Marcar dado como usado
-            self.__gestor_dados__.marcar_dado_usado(salto)
-            
             # Verificar victoria
             estado = self.__game__.mostrar()
             if estado['ganador']:
                 self.__estado__ = 'victoria'
-                return
-            
-            # Si no quedan dados, resetear visuales
-            if not self.__game__.get_saltos():
-                self.__gestor_dados__.actualizar_dados([], 860, 310)
-                
-            # ✅ Si quedan dados pero no hay más movimientos válidos, pasar turno
-            elif not self.__game__.puede_mover():
-                self.__mensaje__ = "No hay más movimientos válidos. Cambiando turno..."
-                self.__mensaje_timer__ = 120
-                self.__game__.cambio_turno()
-                self.__gestor_dados__.actualizar_dados([], 860, 310)
                 
         except BackgammonError as e:
             self.__mensaje__ = f"Error: {str(e)}"
             self.__mensaje_timer__ = 120
             self.__celda_seleccionada__ = None
-            self.__gestor_dados__.deseleccionar_todos()
     
     def _obtener_celda_click(self, pos):
         """
-        ✅ LÓGICA CORREGIDA: Determina qué celda fue clickeada según posición del mouse.
+        Determina qué celda fue clickeada según posición del mouse.
         
         Args:
             pos (tuple): Posición (x, y) del mouse.
@@ -307,50 +276,32 @@ class PygameUI:
         """
         x, y = pos
         
+        # Verificar si está en el área del tablero
         board_x = self.__board_offset_x__
         board_y = self.__board_offset_y__
         
-        # Barra central (entre columnas 6 y 7)
+        # Puntos superiores (23-12)
+        if board_y <= y <= board_y + self.POINT_HEIGHT:
+            col = (x - board_x) // self.POINT_WIDTH
+            if 0 <= col < 6:
+                return 23 - col
+            elif 6 <= col < 12:
+                return 23 - col
+                
+        # Puntos inferiores (11-0)
+        elif board_y + self.BOARD_HEIGHT - self.POINT_HEIGHT <= y <= board_y + self.BOARD_HEIGHT:
+            col = (x - board_x) // self.POINT_WIDTH
+            if 0 <= col < 6:
+                return 11 - col
+            elif 6 <= col < 12:
+                return 11 - col
+        
+        # Barra central
         barra_x = board_x + 6 * self.POINT_WIDTH
         barra_width = 40
         if barra_x <= x <= barra_x + barra_width:
-            if board_y <= y <= board_y + self.BOARD_HEIGHT:
-                return -1
-        
-        # Calcular columna relativa (0-11, saltando la barra)
-        if x < board_x or x > board_x + self.BOARD_WIDTH:
-            return None
-        
-        # ✅ MAPEO CORREGIDO
-        x_rel = x - board_x
-        
-        # Columnas 0-5 (antes de la barra)
-        if x_rel < 6 * self.POINT_WIDTH:
-            col = x_rel // self.POINT_WIDTH
-        # Después de la barra (columnas 6-11)
-        elif x_rel >= (6 * self.POINT_WIDTH + barra_width):
-            col = 6 + (x_rel - 6 * self.POINT_WIDTH - barra_width) // self.POINT_WIDTH
-        else:
-            return None  # Click en la barra
-        
-        if col >= 12:
-            return None
-        
-        # Determinar si es punto superior (12-23) o inferior (0-11)
-        if board_y <= y <= board_y + self.POINT_HEIGHT:
-            # Puntos superiores: 23,22,21... hacia la derecha
-            if col < 6:
-                return 23 - col  # 23, 22, 21, 20, 19, 18
-            else:
-                return 17 - (col - 6)  # 17, 16, 15, 14, 13, 12
-                
-        elif board_y + self.BOARD_HEIGHT - self.POINT_HEIGHT <= y <= board_y + self.BOARD_HEIGHT:
-            # Puntos inferiores: 11,10,9... hacia la derecha
-            if col < 6:
-                return 11 - col  # 11, 10, 9, 8, 7, 6
-            else:
-                return 5 - (col - 6)  # 5, 4, 3, 2, 1, 0
-        
+            return -1
+            
         return None
     
     def _dibujar(self):
@@ -400,9 +351,6 @@ class PygameUI:
         # Dibujar panel lateral
         self._dibujar_panel_info()
         
-        # ✅ Dibujar dados
-        self.__gestor_dados__.dibujar(self.__screen__)
-        
         # Dibujar mensaje temporal
         if self.__mensaje_timer__ > 0:
             self._dibujar_mensaje()
@@ -427,10 +375,6 @@ class PygameUI:
         barra_rect = pygame.Rect(barra_x, board_y, 40, self.BOARD_HEIGHT)
         pygame.draw.rect(self.__screen__, self.__colors__['bar'], barra_rect)
         
-        # Destacar barra si está seleccionada
-        if self.__celda_seleccionada__ == -1:
-            pygame.draw.rect(self.__screen__, self.__colors__['selected'], barra_rect, 3)
-        
         # Dibujar fichas
         self._dibujar_fichas()
     
@@ -448,7 +392,7 @@ class PygameUI:
         color = self.__colors__['point_light'] if indice % 2 == 0 else self.__colors__['point_dark']
         
         # Calcular posición
-        if indice >= 12:  # Puntos superiores (12-23)
+        if indice >= 12:  # Puntos superiores (23-12)
             col = 23 - indice
             if col >= 6:
                 col += 1  # Saltar espacio de barra
@@ -461,7 +405,7 @@ class PygameUI:
                 (x + self.POINT_WIDTH, y),
                 (x + self.POINT_WIDTH // 2, y + self.POINT_HEIGHT)
             ]
-        else:  # Puntos inferiores (0-11)
+        else:  # Puntos inferiores (11-0)
             col = 11 - indice
             if col >= 6:
                 col += 1
@@ -480,11 +424,11 @@ class PygameUI:
         
         # Resaltar si está seleccionado
         if self.__celda_seleccionada__ == indice:
-            pygame.draw.polygon(self.__screen__, self.__colors__['selected'], points, 4)
+            pygame.draw.polygon(self.__screen__, self.__colors__['selected'], points, 3)
     
     def _dibujar_fichas(self):
         """Dibuja todas las fichas en el tablero."""
-        celdas = self.__game__.get_celdas()
+        celdas = self.__game__._Backgammon__board__.get_celdas()
         
         for i in range(24):
             if celdas[i]:
@@ -510,23 +454,20 @@ class PygameUI:
             if col >= 6:
                 col += 1
             x = board_x + col * self.POINT_WIDTH + self.POINT_WIDTH // 2
-            y = board_y + 35
+            y = board_y + 30
             direccion = 1
         else:
             col = 11 - indice
             if col >= 6:
                 col += 1
             x = board_x + col * self.POINT_WIDTH + self.POINT_WIDTH // 2
-            y = board_y + self.BOARD_HEIGHT - 35
+            y = board_y + self.BOARD_HEIGHT - 30
             direccion = -1
-        
-        # ✅ ESPACIADO MEJORADO (45px en lugar de 35px)
-        espaciado = 45
         
         # Dibujar fichas apiladas
         for j, ficha in enumerate(fichas[:5]):  # Máximo 5 fichas visibles
             color = self.__colors__['ficha_x'] if ficha.get_jugador() == 'X' else self.__colors__['ficha_o']
-            pos_y = y + (j * espaciado * direccion)
+            pos_y = y + (j * 35 * direccion)
             
             pygame.draw.circle(self.__screen__, color, (x, pos_y), self.FICHA_RADIUS)
             pygame.draw.circle(self.__screen__, self.__colors__['outline'], (x, pos_y), self.FICHA_RADIUS, 2)
@@ -534,12 +475,12 @@ class PygameUI:
         # Si hay más de 5 fichas, mostrar número
         if len(fichas) > 5:
             texto = self.__fonts__['small'].render(str(len(fichas)), True, self.__colors__['text'])
-            texto_rect = texto.get_rect(center=(x, y + 4 * espaciado * direccion))
+            texto_rect = texto.get_rect(center=(x, y + 4 * 35 * direccion))
             self.__screen__.blit(texto, texto_rect)
     
     def _dibujar_fichas_capturadas(self):
         """Dibuja las fichas capturadas en la barra central."""
-        capturas = self.__game__.get_capturas()
+        capturas = self.__game__._Backgammon__board__.get_capturas()
         
         board_x = self.__board_offset_x__
         board_y = self.__board_offset_y__
@@ -548,27 +489,17 @@ class PygameUI:
         fichas_x = [f for f in capturas if f.get_jugador() == 'X']
         fichas_o = [f for f in capturas if f.get_jugador() == 'O']
         
-        espaciado = 45  # ✅ Espaciado mejorado
-        
         # Dibujar fichas X en parte superior de barra
         for i, _ in enumerate(fichas_x[:5]):
-            y = board_y + 50 + i * espaciado
+            y = board_y + 50 + i * 35
             pygame.draw.circle(self.__screen__, self.__colors__['ficha_x'], (barra_x, y), self.FICHA_RADIUS)
             pygame.draw.circle(self.__screen__, self.__colors__['outline'], (barra_x, y), self.FICHA_RADIUS, 2)
         
-        if len(fichas_x) > 5:
-            texto = self.__fonts__['small'].render(str(len(fichas_x)), True, self.__colors__['text'])
-            self.__screen__.blit(texto, (barra_x - 10, board_y + 50 + 4 * espaciado))
-        
         # Dibujar fichas O en parte inferior de barra
         for i, _ in enumerate(fichas_o[:5]):
-            y = board_y + self.BOARD_HEIGHT - 50 - i * espaciado
+            y = board_y + self.BOARD_HEIGHT - 50 - i * 35
             pygame.draw.circle(self.__screen__, self.__colors__['ficha_o'], (barra_x, y), self.FICHA_RADIUS)
             pygame.draw.circle(self.__screen__, self.__colors__['outline'], (barra_x, y), self.FICHA_RADIUS, 2)
-        
-        if len(fichas_o) > 5:
-            texto = self.__fonts__['small'].render(str(len(fichas_o)), True, self.__colors__['text'])
-            self.__screen__.blit(texto, (barra_x - 10, board_y + self.BOARD_HEIGHT - 50 - 4 * espaciado))
     
     def _dibujar_panel_info(self):
         """Dibuja el panel de información lateral."""
@@ -581,32 +512,32 @@ class PygameUI:
         turno_text = self.__fonts__['normal'].render(f"Turno: {estado['turno']}", True, self.__colors__['text'])
         self.__screen__.blit(turno_text, (panel_x, panel_y))
         
-        # ✅ Instrucciones mejoradas
-        inst1 = self.__fonts__['small'].render("1. Tira los dados", True, self.__colors__['text'])
-        inst2 = self.__fonts__['small'].render("2. Click en ficha", True, self.__colors__['text'])
-        inst3 = self.__fonts__['small'].render("3. Click en dado", True, self.__colors__['text'])
-        inst4 = self.__fonts__['small'].render("ESC: Cancelar", True, self.__colors__['text'])
+        # Dados
+        dados_text = self.__fonts__['small'].render(f"Dados: {estado['saltos']}", True, self.__colors__['text'])
+        self.__screen__.blit(dados_text, (panel_x, panel_y + 50))
         
-        self.__screen__.blit(inst1, (panel_x, panel_y + 100))
-        self.__screen__.blit(inst2, (panel_x, panel_y + 125))
-        self.__screen__.blit(inst3, (panel_x, panel_y + 150))
-        self.__screen__.blit(inst4, (panel_x, panel_y + 175))
-        
-        # Botón tirar dados (solo si no hay dados activos)
+        # Botón tirar dados
         if not estado['saltos']:
             mouse_pos = pygame.mouse.get_pos()
-            btn_dados = pygame.Rect(panel_x, 250, 120, 40)
+            btn_dados = pygame.Rect(panel_x, 300, 120, 40)
             color = self.__colors__['button_hover'] if btn_dados.collidepoint(mouse_pos) else self.__colors__['button']
             pygame.draw.rect(self.__screen__, color, btn_dados, border_radius=5)
-            pygame.draw.rect(self.__screen__, self.__colors__['outline'], btn_dados, 2, border_radius=5)
             
             texto = self.__fonts__['small'].render("Tirar Dados", True, self.__colors__['text'])
-            texto_rect = texto.get_rect(center=btn_dados.center)
-            self.__screen__.blit(texto, texto_rect)
+            self.__screen__.blit(texto, (panel_x + 10, 310))
+        
+        # Botón pasar turno
+        mouse_pos = pygame.mouse.get_pos()
+        btn_pasar = pygame.Rect(panel_x, 350, 120, 40)
+        color = self.__colors__['button_hover'] if btn_pasar.collidepoint(mouse_pos) else self.__colors__['button']
+        pygame.draw.rect(self.__screen__, color, btn_pasar, border_radius=5)
+        
+        texto_pasar = self.__fonts__['small'].render("Pasar Turno", True, self.__colors__['text'])
+        self.__screen__.blit(texto_pasar, (panel_x + 5, 360))
     
     def _dibujar_mensaje(self):
         """Dibuja mensaje temporal en pantalla."""
-        texto = self.__fonts__['small'].render(self.__mensaje__, True, self.__colors__['text'])
+        texto = self.__fonts__['normal'].render(self.__mensaje__, True, self.__colors__['text'])
         
         # Fondo semi-transparente
         superficie = pygame.Surface((texto.get_width() + 40, texto.get_height() + 20))
@@ -634,7 +565,6 @@ class PygameUI:
         btn_rect = pygame.Rect(self.__width__//2 - 100, 400, 200, 50)
         color = self.__colors__['button_hover'] if btn_rect.collidepoint(mouse_pos) else self.__colors__['button']
         pygame.draw.rect(self.__screen__, color, btn_rect, border_radius=10)
-        pygame.draw.rect(self.__screen__, self.__colors__['outline'], btn_rect, 2, border_radius=10)
         
         texto = self.__fonts__['normal'].render("Volver al Menú", True, self.__colors__['text'])
         texto_rect = texto.get_rect(center=btn_rect.center)
