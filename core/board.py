@@ -116,14 +116,6 @@ class Board:
         nums_inf  = " ".join(f"{i:>{3}}" for i in range(11, -1, -1))
         fichas_inf = " ".join(f"{c(i):>{3}}" for i in range(11, -1, -1))
 
-        cap_x= sum(1 for f in self.__capturas__ if f.get_jugador() == "X")
-        cap_o= sum(1 for f in self.__capturas__ if f.get_jugador() == "O")
-
-        if cap_x > 0:
-            fichas_sup += f"   Capturadas X: {cap_x}"
-        if cap_o > 0:
-            fichas_inf += f"   Capturadas O: {cap_o}"
-
         return "\n".join([nums_sup, fichas_sup, barra, fichas_inf, nums_inf])
 
     def mover(self, celda, salto, jugador):
