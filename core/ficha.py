@@ -6,7 +6,7 @@ incluyendo su propietario y estado de captura.
 """
 
 class Ficha:
-    """  
+    """
     class Ficha: Representa una ficha individual en el tablero de Backgammon.
 
     Atributos
@@ -16,7 +16,7 @@ class Ficha:
     """
 
     def __init__(self, jugador: str):
-        """ 
+        """
             Inicializa una nueva ficha para un jugador.
         Crea una ficha en estado libre (no capturada) perteneciente
         al jugador especificado.
@@ -24,12 +24,12 @@ class Ficha:
         Args:
             jugador (str): Identificador del jugador propietario ('X' o 'O').
         """
-        
+
         self.__jugador__ = jugador
         self.__capturada__ = False
 
     def get_jugador(self) -> str:
-        """        
+        """
             Obtiene el identificador del jugador propietario de la ficha.
         Returns:
             str: Identificador del jugador ('X' o 'O').
@@ -47,7 +47,7 @@ class Ficha:
         self.__jugador__ = jugador
 
     def is_capturada(self) -> bool:
-        """        
+        """
             Verifica si la ficha está capturada en la barra.
         Returns:
             bool: True si está en la barra, False si está en el tablero.
@@ -55,7 +55,7 @@ class Ficha:
         return self.__capturada__
 
     def set_capturada(self, capturada: bool = True) -> None:
-        """       
+        """
             Establece el estado de captura de la ficha.
         Args:
             capturada (bool, optional): True para marcar como capturada,
@@ -71,3 +71,4 @@ class Ficha:
         """
         estado = "capturada" if self.__capturada__ else "libre"
         return f"<Ficha jugador={self.__jugador__} {estado}>"
+    

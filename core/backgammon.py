@@ -2,7 +2,7 @@
 Módulo Backgammon - Lógica principal del juego.
 
 Coordina el flujo del juego de Backgammon, integrando el tablero, jugadores,
-dados y validaciones para ejecutar partidas completas, reglas de juego 
+dados y validaciones para ejecutar partidas completas, reglas de juego
 flujo de turnos, movimientos y condiciones de victoria.
 """
 
@@ -12,11 +12,10 @@ from .dice import Dice
 from .validaciones import Validaciones
 from .exceptions import SaltosError
 
-
 class Backgammon:
     """
     class Backgammon:  Clase principal que coordina el juego de Backgammon.
-    
+
     Atributos
         __board__ (Board): Instancia del tablero de juego.
         __players__ (list[Player]): Lista de 2 jugadores.
@@ -26,15 +25,15 @@ class Backgammon:
         __ganador__ (Player|None): Jugador ganador o None si no hay.
     """
     def __init__(self, board=None, players=None, dice=None):
-        """      
-            Inicializa una nueva partida de Backgammon.
+        """
+        Inicializa una nueva partida de Backgammon.
         Args:
             board (Board, optional): Tablero personalizado. Por defecto None.
             players (list[Player], optional): Lista de jugadores. Default None.
             dice (Dice, optional): Dados personalizados. Por defecto None.
         Note:
             Si no se especifican parámetros, se crean con valores por defecto.
-            
+
         """
         self.__board__ = board if board else Board()
         self.__players__ = players if players else [Player("X"), Player("O")]
@@ -45,7 +44,7 @@ class Backgammon:
 
     def inicio(self):
         """
-            Inicializa el juego de Backgammon.
+        Inicializa el juego de Backgammon.
         Configura el tablero, resetea el estado del juego y determina
         el jugador inicial mediante lanzamiento de dados.
         """
@@ -56,10 +55,10 @@ class Backgammon:
 
         print("Seleccion de jugador inicial...")
         self.turno_inicial()
-    
+
     def turno_inicial(self):
         """
-            Determina el primer jugador que inicia el juego.
+        Determina el primer jugador que inicia el juego.
         Lanza los dados hasta obtener valores diferentes. El jugador
         con el valor más alto juega primero.
         Resultado: self.__turno__ -> ganador (0 ó 1)
@@ -70,42 +69,42 @@ class Backgammon:
             if valores[0] != valores[1]:
                 break
             print("Empate, lanzo denuevo")
-        
+
         if valores[0] > valores[1]:
             self.__turno__ = 0
         else:
             self.__turno__ = 1
-        
+
         print(f"El jugador {self.get_jugador().get_name()} juego primero")
-    
+
     def tirar_dado(self):
         """
-            Lanza los dados y obtiene los saltos disponibles.
+        Lanza los dados y obtiene los saltos disponibles.
         Returns:
             list[int]: Lista de movimientos disponibles (2 o 4 valores).
         """
         self.__saltos__ = self.__dice__.roll()
         return self.__saltos__
-    
+
     def get_saltos(self):
         """
-            Obtiene los saltos disponibles para el jugador actual.
+        Obtiene los saltos disponibles para el jugador actual.
         Returns:
             list[int]: Copia de la lista de movimientos disponibles.
         """
         return list(self.__saltos__)
-    
+
     def get_jugador(self):
-        """        
-            Obtiene el jugador actual en turno.
+        """
+        Obtiene el jugador actual en turno.
         Returns:
             Player: Instancia del jugador en turno.
         """
         return self.__players__[self.__turno__]
-    
+
     def mover(self, celda, salto):
-        """         
-            Realiza un movimiento en el juego de Backgammon.
+        """
+        Realiza un movimiento en el juego de Backgammon.
         Valida reglas con modulo Validaciones, mueve con modulo Board
         consume dado usado y verifica victoria.
         Args:
@@ -116,10 +115,10 @@ class Backgammon:
         # validar estado previo
         if not self.__saltos__:
             raise SaltosError("Debes tirar dados primero")
-        
+
         if salto not in self.__saltos__:
             raise SaltosError(f"Salto {salto} no disponible")
-        
+
         # validar desde validaciones movimiento
         if not Validaciones.movimiento_valido(
             celdas=self.__board__.get_celdas(),
@@ -129,20 +128,20 @@ class Backgammon:
             jugador=self.get_jugador().get_name()
         ):
             raise ValueError("Movimiento inválido según las reglas")
-        
+
         # mover desde board
         self.__board__.mover(celda, salto, self.get_jugador().get_name())
-        
+
         # eliminar salto usado
         self.__saltos__.remove(salto)
-        
+
         # ver si victoria
         if Validaciones.validar_victoria(
-            self.__board__.get_celdas(), 
-            self.__board__.get_capturas(), 
+            self.__board__.get_celdas(),
+            self.__board__.get_capturas(),
             self.get_jugador().get_name()):
             self.__ganador__ = self.get_jugador()
-        
+
         # cambiar turno si no hay mas saltos
         if not self.__saltos__:
             self.cambio_turno()
@@ -156,7 +155,7 @@ class Backgammon:
 
     def puede_mover(self):
         """
-            Verifica si el jugador actual puede realizar algún movimiento.
+        Verifica si el jugador actual puede realizar algún movimiento.
         Returns:
             bool: True si existe al menos un movimiento válido.
         """
@@ -169,7 +168,7 @@ class Backgammon:
 
     def mostrar(self):
         """
-            Obtiene el estado completo actual del juego.
+        Obtiene el estado completo actual del juego.
         Información tablero, turno actual, dados disponibles,
         fichas capturadas y ganador.
         Returns:
