@@ -1,107 +1,198 @@
 # Changelog
 
-Registro de cambios importantes del proyecto. Cada versión contiene cambios relevantes.
+Todos los cambios notables en este proyecto se documentarán en este archivo.
 
-Formato: *Keep a Changelog* — [https://keepachangelog.com/es/1.0.0/](https://keepachangelog.com/es/1.0.0/)
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/),
 
 ---
 
-## [0.3.2] - 2025-09-28
+## [1.0.0] - 2025-11-01 / 2025-11-02
+
+### Added
+- **Docker completo**:
+  - `Dockerfile` con imagen Python 3.10-slim
+  - `docker-compose.yml` con servicios: game y test
+  - `.dockerignore` configurado
+
+- **Documentación final**:
+  - `README.md` completo con instalación, uso y features
+  - `JUSTIFICACION.md` con decisiones de diseño y arquitectura
+  - `prompts_desarrollo.md`, `prompts_documentacion.md`, `prompts_testing.md`
+
+- **Tests para CLI**:
+  - `test_cli.py` con 30+ tests
+  - Coverage de CLI aumentado de 0% a 72%
 
 ### Changed
+- **Pygame UI rediseñada**:
+  - Nueva paleta de colores
+  - Panel de información mejor organizado
+  - Visualización de turno inicial agregada
+  - Mejoras en UX: selección ficha → dado
 
-- `cli.py`:  inicialización `saltos -> []` y mostrar turno actual.
-- Estructura: añadido `__init__.py` en el paquete core para importar módulos correctamente.
-- Limpieza: eliminación de pruebas locales en `dice.py`, `player.py` y `ficha.py`.
-- `player.py`: añadido método `set_name()`.
+- **Versionado final**:
+  - Todos los módulos con cobertura ≥90%
+  - Documentación completa
+  - CI/CD funcional
+
+### Notes
+- **Versión 1.0.0**: Proyecto completo y funcional
+- Cumple todos los requisitos de la consigna
+- Coverage total: 90%
+- Docker permite ejecución en cualquier ambiente
+
+---
+
+## [0.6.0] - 2025-10-31
+
+### Added
+- **Interfaz gráfica con Pygame** (`pygame_ui/`):
+  - `pygame_ui.py`: UI completa con menú, juego y victoria
+  - `dados_ui.py`: Dados clickeables con gestor
+  - Tablero visual con celdas triangulares
+  - Panel lateral con información y controles
+  - Sistema de mensajes temporales
+  - Visualización de turno inicial
+
+- **Getters en `backgammon.py`**:
+  - `get_board()`, `get_celdas()`, `get_capturas()`
+  - Necesarios para integración con Pygame
+
+### Changed
+- **Refactor de `backgammon.py`**:
+  - `turno_inicial()` ahora retorna diccionario con info del turno
+  - `inicio()` retorna resultado de `turno_inicial()`
+  - Mejor separación: lógica en core, visualización en UI
+
+- **Mejoras en CLI**:
+  - Mejor validación de entrada
+  - Ayuda completa implementada
+  - UX mejorada con pausas y mensajes claros
 
 ### Fixed
-
-- Corrigido commit accidental de `board.py` pushado en la rama de CI.
-- `backgammon.py` y `validaciones.py`: imports y eliminación de demos.
-- `backgammon.py`: parámetro que tiraba error (`jugador` → `jugador.get_name()`).
-- `ficha.py`: renombrado atributo `dueño` → `jugador`
-- `cli.py`:`get_state()` → `mostrar()`
-
-### Pendiente
-- Interfaz gráfica con Pygame
-- Mejoras en la CLI 
----
-
-## [0.3.1] - 2025-09-16
-
-### Added
-
-- `board.py`: `validar_movimiento` y `mover` implementados (implementación funcional básica, queda corregir integración con CLI).
-- `backgammon.py`: manejo de victoria y mejoras en `mover` 
-
-### Changed
-
-- `player.py`: clase renombrada a `Player`.
-- Se subieron demos temporales en `board.py` y `backgammon.py` para pruebas locales.
-
----
-
-## [0.3.0] - 2025-09-14
-
-### Added
-
-- `dice.py`: lógica para manejar dobles.
-- `validaciones.py`: planteo de validaciones con `@staticmethod` y corrección de `movimiento_valido`.
-
-### Changed
-
-- `board.py`: replanteo de `mover` y `get_board` 
-- `backgammon.py`: desarrollo inicial (esqueleto y lógica básica incompleta).
+- Corrección de flujo de movimientos en Pygame
+- Integración correcta entre core y pygame_ui
 
 ### Notes
-
-- validaciones y la integración de `validaciones` dentro del juego faltan completar.
-
----
-
-## [0.2.1] - 2025-09-11
-
-### Added
-
-- Integración inicial de CI: GitHub Actions y SonarCloud (configuración base y corrección de `ci.yml`).
-- Archivos de configuración añadidos: `.pylintrc`, `requirements.txt`
-- Implementación inicial del CLI (estructura y comandos básicos).
+- Pygame UI funcional con selección de fichas y dados por clicks
+- Ambas interfaces (CLI y Pygame) comparten la misma lógica de core
 
 ---
 
-## [0.2.0] - 2025-09-02
+## [0.5.0] - 2025-10-29 / 2025-10-30
+
 ### Added
 - **Configuración completa del proyecto**:
-  - `.gitignore` configurado correctamente para Python
-  - `__init__.py` en módulos `core/` y `tests/`
+  - `.gitignore` implementado (Python, venv, IDEs, tests)
+  - `__init__.py` en `core/` y `tests/`
+  - Archivos de cache removidos y listados en gitignore
+
+- **Documentación mejorada**:
+  - `CHANGELOG.md` actualizado y reestructurado
+  - Docstrings limpiados y desarrollados
 
 ### Changed
-- Reestructuración:(modulos `Backgammon`, `Board`, `Player`, `Dice`, `Ficha`, `Validaciones`).
+- **CI/CD mejorado**:
+  - Workflow ajustado para ejecutar con unittest
+  - Corrección en ejecución de Pylint y tests
+  - Requirements.txt actualizado
 
+- **Correcciones de Pylint**:
+  - Atributos corregidos: `__atr` → `__atr__`
+  - Imports corregidos: específicos en lugar de `*`
+  - Espacios y líneas largas corregidos
+  - Excepciones concretas en lugar de genéricas
+
+### Fixed
+- Eliminación de `core/main.py` (innecesario)
+- Corrección de imports faltantes en `board.py`
 
 ---
 
-## [0.1.3] - 2025-08-31
+## [0.4.0] - 2025-10-23 / 2025-10-26
+
 ### Added
-- `Dice` ahora devuelve una tupla de dos valores aleatorios `(d1, d2)` 
-- Primera reestructuración de `board` para integrar el módulo `ficha` 
+- **Documentación completa con docstrings**:
+  - Todos los módulos de `core/` documentados (función, args, returns, raises)
+  - Formato estándar: descripción → Args → Returns → Raises
+
+- **Tests exhaustivos con unittest**:
+  - Migración completa de pytest a unittest
+  - `test_cli.py`: 30+ tests para CLI (coverage 72%)
+  - `test_board.py`, `test_validaciones.py`, `test_backgammon.py` actualizados
+  - Uso de mocks y patches para aislar funcionalidad
+
+- **Manejo de movimientos posibles** (`puede_mover()`):
+  - Verificación exhaustiva de movimientos válidos
+  - Implementado en CLI: cambio automático de turno si no hay movimientos
+  - Tests para escenarios sin movimientos posibles
+
 ### Changed
-- `board` para facilitar manejo de fichas como objetos
+- **Refactor de validaciones** (v0.3.0 continuado):
+  - `validar_salida()` y `movimiento_valido()` separados por complejidad (Pylint)
+  - Imports específicos en lugar de `import *`
+  - Mejor manejo de excepciones concretas
 
-### Notes
-- Implementaciones incompletas: presentación y validaciones finas pendientes.
+- **Mejoras en CLI**:
+  - Separación `BackgammonError` vs `Exception` genérica
+  - Mejor UX: validaciones, ayuda y comando salir mejorados
+  - Manejo de interrupciones (Ctrl+C)
 
----
+- **Tests mejorados**:
+  - Corrección de tests para unittest
+  - Tests para `FakeDice` con lógica determinista
+  - Coverage aumentado a 90%
 
-## [0.1.2] - 2025-08-30
+### Fixed
+- Corrección de espacios y formato según Pylint
+- Eliminación de `pass` innecesario en `exceptions.py`
+- Fix en tests por cambios en `validaciones.py`
+
+
+## [0.3.0] - 2025-10-23 / 2025-10-24
+
 ### Added
-- Primera implementación de `Ficha` (módulo `ficha.py`)
-### Changed
-- Preparación para que `Board` y `Player` usen objetos `Ficha` en lugar de tuplas.
+- **Documentación completa con docstrings**:
+  - Todos los módulos documentados (soolo funcion, falta parametros esperados y salida)
 
-### Notes
-- Ficha implementada, pero falta implementar en `board` y `player`.
+- **Sistema de excepciones jerárquico** (`exceptions.py`):
+  - `BackgammonError` como clase base
+  - Excepciones específicas:
+    - `FueraDeRangoError`: índice de celda inválido
+    - `CeldaInvalidaError`: celda vacía o no válida
+    - `CeldaBloqueadaError`: destino bloqueado por enemigo
+    - `FichasCapturadasError`: debe reingresar fichas primero
+    - `SinFichasCapturadas`: no hay fichas en la barra
+    - `ReingresoInvalidoError`: reingreso no válido
+    - `SalidaInvalidaError`: no puede sacar fichas
+    - `SaltosError`: problemas con dados/saltos
+
+- **Módulo Backgammon completo**:
+  - `turno_inicial()`: Selección aleatoria del primer jugador (dados diferentes)
+  - Integración completa con `Validaciones`
+
+- **Refactor de Validaciones**:
+  - Unificación de validaciones en `movimiento_valido()`
+  - `tiene_capturas()`: método auxiliar privado
+  - `validar_salida()` integrado en flujo de validación
+  - `validar_reingreso()`: lógica específica para fichas capturadas
+
+- **Mejoras en Board**:
+  - Sistema de capturas implementado
+  - Eliminación de validaciones (Las agrupo en `Validaciones`)
+  - Método `mover()` simplificado (solo ejecuta movimientos, no valida)
+
+### Changed
+- **Refactorización SOLID completa**:
+  - **Board**: Responsable solo de la estructura y modificación del tablero
+  - **Validaciones**: Toda la lógica de reglas del juego
+  - **Backgammon**: Orquestación y flujo de juego
+  - Separación clara de responsabilidades, Se llegaba a validar 3 veces algunos aspectos entre board-validaciones-Backgammon (Se dejan solo en validaciones)
+
+### Fixed
+- Corrección en `validar_salida()`: verificación correcta de destino fuera de rango
+- Fix en comparación de fichas con jugadores (uso correcto de `get_jugador()`)
+- Corrección de parámetros en llamadas (`jugador` -> `jugador.get_name()`)
 
 ---
 
@@ -123,8 +214,15 @@ Formato: *Keep a Changelog* — [https://keepachangelog.com/es/1.0.0/](https://k
   - Visualización del tablero en cada jugada
 
 ### Changed
-- `get_board`: nuevo formato de salida más legible (dos filas).
-- `mover`: validaciones adicionales y movimiento basado en reglas backgammon
+- **Mejoras en `get_board()`**:
+  - Formato visual mejorado (dos filas con separador)
+  - Mejor representación de fichas (N°-Ficha -> 4X)
+  - Corrección: fichas superiores en orden 23→12 (no 11→0)
+
+### Fixed
+- Fix en `validar_destino()`: verificación de celda vacía antes de acceder
+- Fix en cálculo de destino para jugador O (dirección incorrecta)
+- Corrección en raises de excepciones (ubicación correcta)
 
 ---
 
