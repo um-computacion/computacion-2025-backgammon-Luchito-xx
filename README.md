@@ -1,4 +1,4 @@
-# Backgammon
+# Backgammon - Proyecto Computación 2025
 
 **Alumno**: Luciano Agustín Fernández Actis
 
