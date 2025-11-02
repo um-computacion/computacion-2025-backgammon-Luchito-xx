@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Servicio para jugar (CLI)
+  backgammon-game:
+    build: .
+    image: backgammon:latest
+    container_name: backgammon-game
+    stdin_open: true      # Permite input interactivo
+    tty: true             # Habilita terminal
+    volumes:
+      - .:/app            # Monta código local para desarrollo
+    command: python -m cli.cli
+    networks:
+      - backgammon-net
+
+  # Servicio para testing
+  backgammon-test:
+    build: .
+    image: backgammon:latest
+    container_name: backgammon-test
+    volumes:
+      - .:/app
+    command: >
+      sh -c "
+      coverage run -m unittest discover -s tests -p 'test_*.py' &&
+      coverage report -m &&
+      coverage xml -o coverage.xml
+      "
+    networks:
+      - backgammon-net
+
+
+networks:
+  backgammon-net:
+    driver: bridge
