@@ -1,113 +1,107 @@
 # Changelog
 
-Todos los cambios notables en este proyecto se documentarán en este archivo.
+Registro de cambios importantes del proyecto. Cada versión contiene cambios relevantes.
 
-El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.0/),
+Formato: *Keep a Changelog* — [https://keepachangelog.com/es/1.0.0/](https://keepachangelog.com/es/1.0.0/)
 
 ---
 
-## [Unreleased]
+## [0.3.2] - 2025-09-28
+
+### Changed
+
+- `cli.py`:  inicialización `saltos -> []` y mostrar turno actual.
+- Estructura: añadido `__init__.py` en el paquete core para importar módulos correctamente.
+- Limpieza: eliminación de pruebas locales en `dice.py`, `player.py` y `ficha.py`.
+- `player.py`: añadido método `set_name()`.
+
+### Fixed
+
+- Corrigido commit accidental de `board.py` pushado en la rama de CI.
+- `backgammon.py` y `validaciones.py`: imports y eliminación de demos.
+- `backgammon.py`: parámetro que tiraba error (`jugador` → `jugador.get_name()`).
+- `ficha.py`: renombrado atributo `dueño` → `jugador`
+- `cli.py`:`get_state()` → `mostrar()`
 
 ### Pendiente
 - Interfaz gráfica con Pygame
 - Mejoras en la CLI 
 ---
 
-## [0.5.0] - 2025-10-29
+## [0.3.1] - 2025-09-16
 
+### Added
+
+- `board.py`: `validar_movimiento` y `mover` implementados (implementación funcional básica, queda corregir integración con CLI).
+- `backgammon.py`: manejo de victoria y mejoras en `mover` 
+
+### Changed
+
+- `player.py`: clase renombrada a `Player`.
+- Se subieron demos temporales en `board.py` y `backgammon.py` para pruebas locales.
+
+---
+
+## [0.3.0] - 2025-09-14
+
+### Added
+
+- `dice.py`: lógica para manejar dobles.
+- `validaciones.py`: planteo de validaciones con `@staticmethod` y corrección de `movimiento_valido`.
+
+### Changed
+
+- `board.py`: replanteo de `mover` y `get_board` 
+- `backgammon.py`: desarrollo inicial (esqueleto y lógica básica incompleta).
+
+### Notes
+
+- validaciones y la integración de `validaciones` dentro del juego faltan completar.
+
+---
+
+## [0.2.1] - 2025-09-11
+
+### Added
+
+- Integración inicial de CI: GitHub Actions y SonarCloud (configuración base y corrección de `ci.yml`).
+- Archivos de configuración añadidos: `.pylintrc`, `requirements.txt`
+- Implementación inicial del CLI (estructura y comandos básicos).
+
+---
+
+## [0.2.0] - 2025-09-02
 ### Added
 - **Configuración completa del proyecto**:
   - `.gitignore` configurado correctamente para Python
   - `__init__.py` en módulos `core/` y `tests/`
 
 ### Changed
-- **CI/CD mejorado**: 
-  - Migración a `unittest` para ejecución de tests
-  - Ajustes en workflow de GitHub Actions
-  - Auto-merge automático de PRs de reportes
+- Reestructuración:(modulos `Backgammon`, `Board`, `Player`, `Dice`, `Ficha`, `Validaciones`).
 
-### Fixed
-- Eliminación de archivos tracked innecesarios (`.pyc`, cache)
 
 ---
 
-## [0.4.0] - 2025-10-24 / 2025-10-26
-
+## [0.1.3] - 2025-08-31
 ### Added
-- **CLI completa y funcional** (`cli/cli.py`):
-  - Métodos `obtener_movimiento()`,`mostrar_estado_juego()`,`movimiento()`, `jugar()`
-  - Manejo de fichas capturadas
-  - Detección automática de victoria
-  - Sistema de manejo de errores
-
-- **Funcionalidad `puede_mover()`**:
-  - Validación de movimientos posibles antes de solicitar input
-  - Paso automático de turno cuando no hay movimientos válidos
-  - Implementado en `Validaciones` y usado en CLI
-
-- **Tests exhaustivos**:
-  - Suite completa con 93% de cobertura
-  - Tests para todos los módulos: `backgammon`, `board`, `dice`, `ficha`, `player`, `validaciones`
-  - Casos de borde y escenarios complejos
-  - Uso de mocks y patches para aislar funcionalidad
-
+- `Dice` ahora devuelve una tupla de dos valores aleatorios `(d1, d2)` 
+- Primera reestructuración de `board` para integrar el módulo `ficha` 
 ### Changed
-- Refactor de manejo de excepciones en CLI:
-  - Separación entre `BackgammonError` (errores de dominio esperados)
-  - Captura genérica de `Exception` para errores inesperados
-  - Mensajes de error más descriptivos
+- `board` para facilitar manejo de fichas como objetos
 
-### Fixed
-- Corrección en tests de `Dice` con dados dobles
-- Fix en tests de `Board` para movimientos
-- Ajustes en validaciones de reingreso
+### Notes
+- Implementaciones incompletas: presentación y validaciones finas pendientes.
 
 ---
 
-## [0.3.0] - 2025-10-23 / 2025-10-24
-
+## [0.1.2] - 2025-08-30
 ### Added
-- **Documentación completa con docstrings**:
-  - Todos los módulos documentados (soolo funcion, falta parametros esperados y salida)
-
-- **Sistema de excepciones jerárquico** (`exceptions.py`):
-  - `BackgammonError` como clase base
-  - Excepciones específicas:
-    - `FueraDeRangoError`: índice de celda inválido
-    - `CeldaInvalidaError`: celda vacía o no válida
-    - `CeldaBloqueadaError`: destino bloqueado por enemigo
-    - `FichasCapturadasError`: debe reingresar fichas primero
-    - `SinFichasCapturadas`: no hay fichas en la barra
-    - `ReingresoInvalidoError`: reingreso no válido
-    - `SalidaInvalidaError`: no puede sacar fichas
-    - `SaltosError`: problemas con dados/saltos
-
-- **Módulo Backgammon completo**:
-  - `turno_inicial()`: Selección aleatoria del primer jugador (dados diferentes)
-  - Integración completa con `Validaciones`
-
-- **Refactor de Validaciones**:
-  - Unificación de validaciones en `movimiento_valido()`
-  - `tiene_capturas()`: método auxiliar privado
-  - `validar_salida()` integrado en flujo de validación
-  - `validar_reingreso()`: lógica específica para fichas capturadas
-
-- **Mejoras en Board**:
-  - Sistema de capturas implementado
-  - Eliminación de validaciones (Las agrupo en `Validaciones`)
-  - Método `mover()` simplificado (solo ejecuta movimientos, no valida)
-
+- Primera implementación de `Ficha` (módulo `ficha.py`)
 ### Changed
-- **Refactorización SOLID completa**:
-  - **Board**: Responsable solo de la estructura y modificación del tablero
-  - **Validaciones**: Toda la lógica de reglas del juego
-  - **Backgammon**: Orquestación y flujo de juego
-  - Separación clara de responsabilidades, Se llegaba a validar 3 veces algunos aspectos entre board-validaciones-Backgammon (Se dejan solo en validaciones)
+- Preparación para que `Board` y `Player` usen objetos `Ficha` en lugar de tuplas.
 
-### Fixed
-- Corrección en `validar_salida()`: verificación correcta de destino fuera de rango
-- Fix en comparación de fichas con jugadores (uso correcto de `get_jugador()`)
-- Corrección de parámetros en llamadas (`jugador` -> `jugador.get_name()`)
+### Notes
+- Ficha implementada, pero falta implementar en `board` y `player`.
 
 ---
 
@@ -129,15 +123,8 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es/1.0.
   - Visualización del tablero en cada jugada
 
 ### Changed
-- **Mejoras en `get_board()`**:
-  - Formato visual mejorado (dos filas con separador)
-  - Mejor representación de fichas (N°-Ficha -> 4X)
-  - Corrección: fichas superiores en orden 23→12 (no 11→0)
-
-### Fixed
-- Fix en `validar_destino()`: verificación de celda vacía antes de acceder
-- Fix en cálculo de destino para jugador O (dirección incorrecta)
-- Corrección en raises de excepciones (ubicación correcta)
+- `get_board`: nuevo formato de salida más legible (dos filas).
+- `mover`: validaciones adicionales y movimiento basado en reglas backgammon
 
 ---
 
