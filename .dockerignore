@@ -1,0 +1,78 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing & Coverage (generados en runtime)
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+coverage_report.txt
+pylint_report.txt
+.hypothesis/
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Git (NO copiar repositorio)
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Documentación (solo README es necesario)
+CHANGELOG.md
+JUSTIFICACION.md
+prompts-testing.md
+REPORTS.md
+*.md
+!README.md
+
+# Docker (no copiar estos archivos al contenedor)
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.tar
+docker-compose.log
+
+# Project specific
+generate_reports.py
+dump.rdb
+*.log
+
+# Assets innecesarios para contenedor
+assets/
+
+# Pygame UI (no necesario para tests en Docker)
+pygame_ui/
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+.DS_Store
